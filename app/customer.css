@@ -1,0 +1,1683 @@
+/* Customer app: one single-page shell (home carousel, category list, item, order, checkout, order
+   status). No borders and no drop shadows: surfaces are told apart by tone alone, and life comes
+   from motion, light and grain on the coloured controls. Direction-aware through logical
+   properties. Tokens live in base.css. */
+
+/* ---------- Splash (outside .fd: it plays before the app is ready) ---------- */
+.fd-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: #fefdee;
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: fd-splash-failsafe 0.4s ease 10s forwards;
+}
+
+.fd-splash video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (min-aspect-ratio: 4 / 5) {
+  .fd-splash video {
+    object-fit: contain;
+  }
+}
+
+.fd-splash.is-out {
+  opacity: 0;
+  transform: scale(1.08);
+  pointer-events: none;
+}
+
+html[data-intro="seen"] .fd-splash {
+  display: none;
+}
+
+/* Scrolling is locked only while the intro is actually on screen (never on staff pages). */
+body:has(.fd-splash) {
+  overflow: hidden;
+}
+
+@keyframes fd-splash-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* The app rises into place while the intro fades away. */
+html[data-intro="leaving"] .fd-contents > * {
+  animation: fd-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fd-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+}
+
+/* ---------- Frame ---------- */
+.fd-app {
+  --dock: 136px;
+  width: min(100%, 520px);
+  margin-inline: auto;
+  min-height: 100dvh;
+  position: relative;
+}
+
+/* Space the floating wheel (and the order bar above it) takes at the bottom. */
+.fd-app[data-order="true"] {
+  --dock: 204px;
+}
+
+.fd-contents {
+  display: contents;
+}
+
+.fd-top {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: calc(68px + env(safe-area-inset-top));
+  padding: env(safe-area-inset-top) 12px 0;
+  background: var(--c-bg);
+}
+
+.fd-top-start {
+  justify-self: start;
+}
+
+.fd-top-end {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fd-brand {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 52px;
+  transition: transform 0.25s var(--ease-out);
+}
+
+.fd-brand:active {
+  transform: scale(0.92) rotate(-4deg);
+}
+
+.fd-brand img {
+  display: block;
+  height: 52px;
+  width: auto;
+}
+
+.fd-lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding-inline: 8px;
+  color: var(--c-primary-text);
+  font-size: 16px;
+  font-weight: 700;
+}
+.fd-icon-btn.fd-bare {
+  background: none;
+}
+
+.fd-table {
+  padding-inline: 4px;
+  color: var(--c-primary-text);
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.fd-badge {
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-end: 0;
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding-inline: 5px;
+  border-radius: 8px;
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  animation: fd-pop 0.4s var(--ease-out);
+}
+
+.fd-enter {
+  animation: fd-rise 0.4s var(--ease-out) both;
+  animation-delay: calc(min(var(--i, 0), 6) * 30ms);
+}
+
+@keyframes fd-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@keyframes fd-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+/* ---------- Glow and grain on coloured controls ---------- */
+.fd-live {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.fd-live::before,
+.fd-live::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Every so often the control lifts a hair in brightness and colour, then settles. Opacity only. */
+.fd-live::before {
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 170, 215, 0.14));
+  mix-blend-mode: soft-light;
+  opacity: 0;
+  animation: fd-lift 9s ease-in-out infinite;
+}
+
+/* A fixed, fine grain: texture only, nothing moves. */
+.fd-live::after {
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 140px 140px;
+  mix-blend-mode: soft-light;
+  opacity: 0.55;
+}
+
+@keyframes fd-lift {
+  0%,
+  58%,
+  100% {
+    opacity: 0;
+  }
+  78% {
+    opacity: 1;
+  }
+}
+
+/* ---------- Home: concave carousel ---------- */
+.fd-home {
+  --w: min(56vw, 250px);
+  position: relative;
+  overflow: clip;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  padding-block-end: var(--dock);
+}
+.fd-home-title {
+  position: relative;
+  z-index: 1;
+  padding: 2px 24px 0;
+  text-align: center;
+  font-size: clamp(30px, 9.5vw, 42px);
+  font-weight: 900;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.fd-home-title em {
+  color: var(--c-primary);
+  font-style: normal;
+}
+
+/* Soft pastel rings and arcs, like the sprinkles in the brand artwork. Drawn as vectors, moved by
+   transform only. */
+.fd-confetti {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+.fd-bit {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--s);
+  height: var(--s);
+  opacity: 0.6;
+  transform: rotate(var(--r));
+  /* A slow wander across the page, like a live wallpaper. */
+  animation: fd-wander var(--d) ease-in-out var(--t) infinite alternate;
+  will-change: transform;
+}
+
+@keyframes fd-wander {
+  to {
+    transform: translate3d(var(--dx), var(--dy), 0) rotate(calc(var(--r) + 150deg));
+  }
+}
+
+.fd-car {
+  position: relative;
+  z-index: 1;
+  height: calc(var(--w) * 1.25 + 32px);
+  margin-block: 10px 4px;
+  perspective: 1100px;
+  touch-action: pan-y;
+  cursor: grab;
+  /* A short, smooth fade right at the edges: no hard band. */
+  /* A long, soft, low-contrast fade: the edges dim gently, they never cut off. */
+  -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.3) 0, rgba(0, 0, 0, 0.36) 2%, rgba(0, 0, 0, 0.46) 5%, rgba(0, 0, 0, 0.6) 9%, rgba(0, 0, 0, 0.76) 14%, rgba(0, 0, 0, 0.9) 19%, rgba(0, 0, 0, 0.97) 24%, #000 30%, #000 70%, rgba(0, 0, 0, 0.97) 76%, rgba(0, 0, 0, 0.9) 81%, rgba(0, 0, 0, 0.76) 86%, rgba(0, 0, 0, 0.6) 91%, rgba(0, 0, 0, 0.46) 95%, rgba(0, 0, 0, 0.36) 98%, rgba(0, 0, 0, 0.3) 100%);
+  mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.3) 0, rgba(0, 0, 0, 0.36) 2%, rgba(0, 0, 0, 0.46) 5%, rgba(0, 0, 0, 0.6) 9%, rgba(0, 0, 0, 0.76) 14%, rgba(0, 0, 0, 0.9) 19%, rgba(0, 0, 0, 0.97) 24%, #000 30%, #000 70%, rgba(0, 0, 0, 0.97) 76%, rgba(0, 0, 0, 0.9) 81%, rgba(0, 0, 0, 0.76) 86%, rgba(0, 0, 0, 0.6) 91%, rgba(0, 0, 0, 0.46) 95%, rgba(0, 0, 0, 0.36) 98%, rgba(0, 0, 0, 0.3) 100%);
+
+}
+.fd-car:active {
+  cursor: grabbing;
+}
+
+.fd-car:focus-visible {
+  outline-offset: -4px;
+}
+
+/* Cards are placed by script on the curve; this only sizes and centres them. */
+.fd-slide {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: var(--w);
+  will-change: transform, opacity;
+}
+.fd-slide-photo {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--primary-100);
+}
+
+.fd-slide-photo .fd-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fd-pick {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 10px 16px 0;
+  min-height: 112px;
+  text-align: center;
+}
+
+.fd-pick-name {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.4;
+}
+
+.fd-pick-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 48px;
+}
+
+/* ---------- Photos ---------- */
+.fd-photo {
+  display: block;
+  object-fit: cover;
+  background: var(--c-soft);
+}
+
+.fd-photo--empty {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-100);
+  color: var(--c-primary-text);
+}
+
+/* ---------- Category wheel ---------- */
+.fd-wheel {
+  position: fixed;
+  inset-block-end: calc(12px + env(safe-area-inset-bottom));
+  inset-inline: 0;
+  z-index: 30;
+  width: min(calc(100% - 24px), 496px);
+  height: 108px;
+  margin-inline: auto;
+  overflow: hidden;
+  background: var(--c-soft);
+  border-radius: 50% 50% 32px 32px / 76px 76px 32px 32px;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+.fd-wheel:active {
+  cursor: grabbing;
+}
+
+.fd-wheel-dot {
+  position: absolute;
+  inset-block-start: 14px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: var(--c-primary);
+}
+
+.fd-wheel-item {
+  position: absolute;
+  inset-block-start: 34px;
+  left: 50%;
+  min-height: 44px;
+  padding-inline: 4px;
+  white-space: nowrap;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-700);
+  will-change: transform;
+}
+
+.fd-wheel-item[data-active="true"] {
+  color: var(--c-ink);
+}
+
+.fd-wheel-stage {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.fd-wheel-stage:focus-visible {
+  outline-offset: -4px;
+}
+
+/* Two arrows breathing apart: swipe either way. Gone for good after the first swipe. */
+.fd-wheel-hint {
+  position: absolute;
+  inset-block-end: 6px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 56px;
+  min-height: 28px;
+  margin-left: -28px;
+  color: var(--c-primary-text);
+  animation: fd-hint-in 0.5s var(--ease-out) 1s both;
+}
+
+.fd-wheel-hint svg:first-child {
+  scale: -1 1;
+  animation: fd-nudge-a 1.8s ease-in-out infinite;
+}
+
+.fd-wheel-hint svg:last-child {
+  animation: fd-nudge-b 1.8s ease-in-out infinite;
+}
+
+@keyframes fd-hint-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fd-nudge-a {
+  50% {
+    transform: translateX(-5px);
+    opacity: 0.45;
+  }
+}
+
+@keyframes fd-nudge-b {
+  50% {
+    transform: translateX(5px);
+    opacity: 0.45;
+  }
+}
+
+/* ---------- Order bar ---------- */
+.fd-orderbar {
+  position: fixed;
+  inset-block-end: calc(128px + env(safe-area-inset-bottom));
+  inset-inline: 0;
+  z-index: 30;
+  width: min(calc(100% - 24px), 496px);
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 56px;
+  padding-inline: 20px;
+  border-radius: 18px;
+  background: var(--grad-primary-accent);
+  /* Light along the top edge, depth along the bottom: an inner glow, not a drop shadow. */
+  box-shadow:
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.5),
+    inset 0 14px 18px -10px rgba(255, 255, 255, 0.22),
+    inset 0 -16px 22px -10px rgba(70, 0, 25, 0.5);
+  color: var(--c-on-primary);
+  font-weight: 700;
+  animation: fd-bar-in 0.4s var(--ease-out) both;
+  transition: transform 0.18s ease, filter 0.18s;
+}
+
+.fd-orderbar:active {
+  transform: scale(0.985);
+  filter: brightness(1.06);
+}
+
+.fd-orderbar-main,
+.fd-orderbar-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fd-orderbar-meta {
+  gap: 12px;
+}
+
+.fd-orderbar-meta small {
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+.fd-orderbar strong {
+  font-weight: 900;
+}
+
+@keyframes fd-bar-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+/* ---------- Category list ---------- */
+.fd-page {
+  padding: 8px 16px calc(var(--dock) + 24px);
+}
+
+.fd-page-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block-end: 14px;
+}
+
+.fd-page-title h2 {
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.fd-page-title p {
+  color: var(--c-ink-soft);
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.fd-list {
+  display: grid;
+}
+.fd-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 4px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  animation: fd-rise 0.35s var(--ease-out) both;
+  animation-delay: calc(min(var(--i, 0), 6) * 30ms);
+}
+
+.fd-row + .fd-row::before,
+.fd-line + .fd-line::before,
+.fd-pay + .fd-pay::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: var(--rule);
+}
+.fd-row:active {
+  background: color-mix(in srgb, var(--c-primary) 6%, transparent);
+}
+.fd-row[data-soldout="true"] .fd-row-photo {
+  opacity: 0.5;
+}
+
+.fd-row-photo {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--c-soft);
+}
+
+.fd-row-photo .fd-photo {
+  width: 100%;
+  height: 100%;
+}
+
+.fd-row-body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.fd-name {
+  display: block;
+  text-align: start;
+  white-space: nowrap;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.fd-row-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fd-price {
+  color: var(--c-primary-text);
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.fd-sold {
+  color: var(--c-ink-soft);
+  font-weight: 700;
+}
+
+.fd-add-wrap {
+  position: relative;
+  display: inline-grid;
+}
+
+/* The count sits on the add button like a badge, so the row never changes shape. */
+.fd-count {
+  position: absolute;
+  inset-block-start: -6px;
+  inset-inline-end: -6px;
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding-inline: 5px;
+  border-radius: 8px;
+  background: var(--c-bg);
+  color: var(--c-primary-text);
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
+  animation: fd-pop 0.25s ease-out;
+}
+
+.fd-empty {
+  padding: 48px 16px;
+  text-align: center;
+  color: var(--c-ink-soft);
+}
+
+.fd-notice {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 16px 6px;
+  padding: 10px 4px 14px;
+  color: var(--c-ink);
+  font-weight: 700;
+  animation: fd-rise 0.35s var(--ease-out) both;
+}
+
+.fd-notice::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--rule);
+}
+.fd-link {
+  color: var(--c-primary-text);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.fd-link--btn {
+  min-height: 44px;
+  padding-inline: 8px;
+}
+
+/* ---------- Item view: a bottom sheet ---------- */
+.fd-sheet-root {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overscroll-behavior: contain;
+}
+
+/* The page stays in view, dimmed; a tap on it closes the sheet. */
+.fd-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(35, 21, 16, 0.5);
+}
+
+.fd-sheet {
+  position: relative;
+  container-type: inline-size;
+  width: min(100%, 520px);
+  max-height: 94dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--c-bg);
+  border-radius: 24px 24px 0 0;
+  will-change: transform;
+}
+
+.fd-grab {
+  display: grid;
+  place-items: center;
+  flex: none;
+  height: 28px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.fd-grab span {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--text-900) 22%, transparent);
+}
+
+/* The photo is square; on a short screen it is capped and cropped, never stretched. */
+.fd-sheet-photo {
+  position: relative;
+  flex: none;
+  height: min(100cqw, 36dvh);
+  overflow: hidden;
+  background: var(--primary-100);
+  touch-action: none;
+}
+
+.fd-sheet-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+}
+
+.fd-sheet-photo img.fd-hi {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.fd-sheet-photo img.fd-hi[data-ready="true"] {
+  opacity: 1;
+}
+
+.fd-detail-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--c-primary-text);
+}
+
+.fd-close {
+  position: absolute;
+  inset-block-start: 10px;
+  inset-inline-start: 10px;
+  z-index: 2;
+  background: color-mix(in srgb, var(--c-bg) 92%, transparent);
+}
+
+.fd-detail-scroll {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  min-height: 0;
+  padding: 16px 20px 4px;
+  overflow-y: auto;
+}
+
+.fd-detail-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fd-detail-head h2 {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.fd-detail-price {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fd-detail-head .fd-price {
+  font-size: 20px;
+}
+
+.fd-desc {
+  color: var(--c-ink-soft);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.fd-group {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fd-group legend,
+.fd-section-title {
+  padding: 0;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.fd-opts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 8px;
+}
+
+.fd-opt {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding: 10px 8px;
+  border-radius: 16px;
+  background: var(--c-soft);
+  text-align: center;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.25s, color 0.25s, transform 0.2s var(--ease-out);
+}
+
+.fd-opt:active {
+  transform: scale(0.96);
+}
+
+.fd-opt input,
+.fd-pay input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fd-opt small {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--c-ink-soft);
+}
+
+.fd-opt:has(input:checked) {
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+}
+
+.fd-opt:has(input:checked) small {
+  color: inherit;
+}
+
+.fd-opt:has(input:focus-visible),
+.fd-pay:has(input:focus-visible) {
+  outline: 3px solid var(--c-focus);
+  outline-offset: 2px;
+}
+
+/* An extra is a row with its own "Add" button; the button shows whether it is in the order. */
+.fd-extra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 46px;
+}
+.fd-extra-text {
+  display: grid;
+  min-width: 0;
+}
+
+.fd-extra-text small {
+  color: var(--c-primary-text);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.fd-extra-btn {
+  flex: none;
+  min-width: 112px;
+  min-height: 42px;
+  padding-inline: 14px;
+  border-radius: 12px;
+  font-size: 15px;
+}
+.fd-extra-btn:active {
+  transform: scale(0.94);
+}
+
+.fd-extra-btn[aria-pressed="true"] {
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+}
+
+.fd-detail-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 20px calc(14px + env(safe-area-inset-bottom));
+}
+
+.fd-detail-foot .fd-btn {
+  flex: 1;
+}
+.fd-detail-foot .fd-btn {
+  flex: 1;
+}
+
+/* ---------- Buttons ---------- */
+.fd-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding-inline: 24px;
+  border-radius: 16px;
+  background: var(--grad-primary-accent);
+  color: var(--c-on-primary);
+  font-size: 17px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.18s ease, opacity 0.18s, filter 0.18s, background 0.25s, color 0.25s;
+}
+
+.fd-btn:active:not(:disabled) {
+  transform: scale(0.97);
+  filter: brightness(1.08);
+}
+
+.fd-btn:disabled {
+  opacity: 0.45;
+}
+
+.fd-btn--block {
+  width: 100%;
+}
+
+.fd-btn--soft {
+  background: var(--c-soft);
+  color: var(--c-ink);
+}
+
+.fd-btn--quiet {
+  min-height: 44px;
+  padding-inline: 10px;
+  background: none;
+  color: var(--c-primary-text);
+  font-size: 16px;
+}
+
+/* Icon-only buttons: 44px targets. */
+.fd-ibtn {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+  transition: transform 0.18s ease, filter 0.18s, background 0.25s;
+}
+
+.fd-ibtn:active:not(:disabled) {
+  transform: scale(0.9);
+}
+
+.fd-ibtn--soft {
+  background: var(--c-soft);
+}
+
+.fd-ibtn--add {
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+}
+
+.fd-ibtn--add:disabled {
+  background: var(--c-soft);
+  color: var(--c-ink-soft);
+}
+
+.fd-ibtn--add[data-done="true"] {
+  background: var(--c-ok);
+}
+
+/* ---------- Quantity: + on the left, the number, then x (one left) or - (more) on the right ---------- */
+.fd-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+
+.fd-sbtn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  transition: transform 0.15s ease, background 0.2s, color 0.2s;
+}
+
+.fd-stepper[data-size="sm"] .fd-sbtn {
+  width: 40px;
+  height: 40px;
+}
+
+.fd-sbtn:active:not(:disabled) {
+  transform: scale(0.88);
+}
+
+.fd-sbtn:disabled {
+  opacity: 0.35;
+}
+
+.fd-sbtn--add {
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+}
+
+.fd-sbtn--less {
+  background: var(--c-soft);
+  color: var(--c-ink);
+}
+
+.fd-sbtn--less[data-remove="true"] {
+  color: var(--c-danger);
+}
+
+.fd-stepper output {
+  min-width: 26px;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+/* ---------- Order and checkout ---------- */
+.fd-screen {
+  padding: 4px 16px 200px;
+  animation: fd-fade 0.35s ease both;
+}
+
+.fd-screen-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block-end: 14px;
+}
+
+.fd-screen-head h2 {
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1.4;
+}
+
+.fd-lines {
+  display: grid;
+}
+.fd-line {
+  position: relative;
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 4px;
+  animation: fd-rise 0.35s var(--ease-out) both;
+  animation-delay: calc(min(var(--i, 0), 6) * 30ms);
+}
+.fd-line-photo {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--c-soft);
+}
+
+.fd-line-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.fd-line-text small {
+  color: var(--c-ink-soft);
+  font-size: 14px;
+}
+
+.fd-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.fd-lines + .fd-field,
+.fd-lines + .fd-total {
+  margin-block-start: 16px;
+}
+
+.fd-field + .fd-total {
+  margin-block-start: 12px;
+}
+
+.fd-total {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 4px 6px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.fd-total::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: var(--rule);
+}
+.fd-total strong {
+  color: var(--c-primary-text);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.fd-sticky-cta {
+  position: fixed;
+  inset-block-end: 0;
+  inset-inline: 0;
+  z-index: 30;
+  width: min(100%, 520px);
+  margin-inline: auto;
+  display: grid;
+  gap: 10px;
+  padding: 26px 16px calc(14px + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, var(--c-bg) 68%, transparent);
+}
+
+/* The total stays in view above the action. */
+.fd-cta-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-inline: 6px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.fd-cta-total strong {
+  color: var(--c-primary-text);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.fd-sticky-cta .fd-btn {
+  width: 100%;
+}
+
+.fd-empty-cart {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  padding: 64px 16px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.fd-hero-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: var(--primary-100);
+  color: var(--c-primary-text);
+}
+
+/* The table is already known from the QR code: one quiet line, nothing to fill in. */
+.fd-served {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--c-primary-text);
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.fd-field-error {
+  color: var(--c-danger);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.fd-input[aria-invalid="true"] {
+  background: var(--accent-50);
+  outline: 2px solid var(--c-danger);
+}
+
+.fd-pays {
+  display: grid;
+}
+.fd-pay {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 4px;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.fd-pay:active {
+  transform: scale(0.985);
+}
+
+.fd-pay-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--c-soft);
+  color: var(--c-primary-text);
+}
+.fd-pay-text {
+  display: grid;
+  min-width: 0;
+}
+
+.fd-pay-text small {
+  color: var(--c-ink-soft);
+  font-size: 14px;
+}
+
+.fd-radio {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--c-soft);
+  transition: background 0.25s;
+}
+
+.fd-pay:has(input:checked) {
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--c-primary) 9%, transparent) 18%, color-mix(in srgb, var(--c-primary) 9%, transparent) 82%, transparent);
+}
+.fd-pay:has(input:checked) .fd-radio {
+  background: radial-gradient(circle, var(--c-on-primary) 0 28%, var(--c-primary) 30%);
+}
+
+.fd-transfer {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  padding: 18px 4px 4px;
+  animation: fd-rise 0.35s var(--ease-out) both;
+}
+
+.fd-transfer::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: var(--rule);
+}
+.fd-account {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--c-soft);
+}
+.fd-account div {
+  display: grid;
+  min-width: 0;
+}
+
+.fd-account small {
+  color: var(--c-ink-soft);
+}
+
+.fd-account strong {
+  direction: ltr;
+  text-align: start;
+  font-size: 19px;
+}
+
+.fd-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding-inline: 12px;
+  color: var(--c-primary-text);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.fd-file {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fd-file label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding-inline: 18px;
+  border-radius: 16px;
+  background: var(--c-soft);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.fd-file img {
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.fd-help {
+  color: var(--c-ink-soft);
+  font-size: 15px;
+}
+
+.fd-error {
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: var(--accent-100);
+  color: var(--accent-800);
+  font-weight: 700;
+}
+
+/* ---------- Order status ---------- */
+.fd-status-card {
+  --tone: var(--primary-500);
+  display: grid;
+  gap: 8px;
+  padding: 22px 20px 12px;
+  border-radius: 20px;
+  /* Only a faint glow just inside the edges: it frames the card without filling it. */
+  background: color-mix(in srgb, var(--tone) 3%, transparent);
+  box-shadow: inset 0 0 22px 2px color-mix(in srgb, var(--tone) 15%, transparent);
+  color: var(--c-ink);
+}
+.fd-status-card[data-state="ready"] {
+  --tone: var(--secondary-500);
+}
+
+.fd-status-card[data-state="done"] {
+  --tone: var(--c-ok);
+}
+
+.fd-status-card[data-state="cancelled"] {
+  --tone: var(--text-500);
+}
+
+.fd-status-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--c-ink-soft);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.fd-status-card h2 {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.5;
+}
+
+.fd-divider {
+  height: 2px;
+  margin-block: 8px 0;
+  border-radius: 2px;
+  background: var(--primary-200);
+  opacity: 0.7;
+}
+
+.fd-details-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  color: var(--c-primary-text);
+  font-weight: 700;
+}
+
+.fd-details-chevron {
+  transform: rotate(90deg);
+  transition: transform 0.25s ease;
+}
+
+.fd-details-toggle[aria-expanded="true"] .fd-details-chevron {
+  transform: rotate(-90deg);
+}
+
+/* The details open by growing their own row, so nothing below them jumps or changes alignment. */
+.fd-details {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.fd-details[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.fd-details > div {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.fd-details-lines {
+  display: grid;
+  gap: 10px;
+  padding-block: 4px 12px;
+}
+
+.fd-details-lines li {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: 700;
+}
+
+.fd-details-lines li > span:first-child {
+  display: grid;
+  min-width: 0;
+}
+
+.fd-details-lines small {
+  color: var(--c-ink-soft);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.fd-details-lines li > span:last-child {
+  color: var(--c-primary-text);
+  white-space: nowrap;
+}
+
+.fd-details-facts {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-block: 12px 6px;
+  background: linear-gradient(var(--primary-200), var(--primary-200)) top / 100% 2px no-repeat;
+}
+
+.fd-details-facts div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fd-details-facts dt {
+  color: var(--c-ink-soft);
+}
+
+.fd-details-facts dd {
+  margin: 0;
+  font-weight: 700;
+  text-align: end;
+}
+
+.fd-details-total dd {
+  color: var(--c-primary-text);
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.fd-bell {
+  display: inline-grid;
+  color: var(--c-primary-text);
+  animation: fd-ring 1.6s ease-in-out infinite;
+}
+
+@keyframes fd-ring {
+  0%, 60%, 100% {
+    transform: rotate(0);
+  }
+  10%, 30% {
+    transform: rotate(10deg);
+  }
+  20%, 40% {
+    transform: rotate(-10deg);
+  }
+}
+
+.fd-timeline {
+  display: grid;
+  margin-block-start: 22px;
+}
+
+.fd-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 14px;
+  padding-block-end: 22px;
+}
+
+.fd-step:last-child {
+  padding-block-end: 0;
+}
+
+.fd-step::before {
+  content: "";
+  position: absolute;
+  inset-block: 36px 0;
+  inset-inline-start: 16px;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--c-soft);
+}
+
+.fd-step:last-child::before {
+  display: none;
+}
+
+.fd-step[data-state="done"]::before {
+  background: var(--c-primary);
+}
+
+.fd-step-dot {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--c-soft);
+  color: var(--c-ink-soft);
+  font-weight: 900;
+}
+
+.fd-step[data-state="done"] .fd-step-dot,
+.fd-step[data-state="current"] .fd-step-dot {
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+}
+
+/* The current step is marked by a still halo, not by movement. */
+.fd-step[data-state="current"] .fd-step-dot {
+  outline: 5px solid color-mix(in srgb, var(--c-primary) 22%, transparent);
+}
+
+.fd-step div {
+  display: grid;
+  align-content: center;
+}
+
+.fd-step[data-state="upcoming"] strong {
+  color: var(--c-ink-soft);
+  font-weight: 500;
+}
+
+.fd-step small {
+  color: var(--c-ink-soft);
+}
+
+/* A name is never wrapped, shrunk or cut with an ellipsis. If one is ever longer than its box, the
+   line scrolls sideways inside the box instead of spilling out of the card. */
+.fd-name,
+.fd-pick-name,
+.fd-detail-head h2,
+.fd-page-title h2 {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.fd-name::-webkit-scrollbar,
+.fd-pick-name::-webkit-scrollbar,
+.fd-detail-head h2::-webkit-scrollbar,
+.fd-page-title h2::-webkit-scrollbar {
+  display: none;
+}
+
+/* The warm wash sits behind the carousel and the item info, never over them. */
+.fd-home > .fd-car,
+.fd-home > .fd-pick {
+  position: relative;
+  z-index: 1;
+}
+
+.fd-wheel-hint {
+  direction: ltr;
+}
+
+/* The close button arrives once the photo has mostly grown. */
+@keyframes fd-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Whole screens only fade in: a moving (transformed) screen would drag its fixed bottom button along. */
+.fd-screen {
+  animation: fd-fade 0.35s ease both;
+}
+
+
+/* Nothing in the customer app can be selected, dragged or saved by accident: text, photos and
+   icons are plain surface. Only fields stay editable. */
+.fd-app {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.fd-app :is(input, textarea) {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.fd-app img,
+.fd-app svg,
+.fd-app video {
+  -webkit-user-drag: none;
+  user-select: none;
+  pointer-events: none;
+}

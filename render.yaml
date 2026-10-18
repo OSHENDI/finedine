@@ -1,0 +1,42 @@
+# Render Blueprint: one free web service that deploys from GitHub on every push.
+# New > Blueprint in the Render dashboard, pick this repository, and Render reads this file.
+# Secrets marked sync:false are asked for once in the dashboard; generated ones are created for you.
+services:
+  - type: web
+    name: finedine
+    runtime: node
+    plan: free
+    region: frankfurt
+    branch: main
+    autoDeployTrigger: commit
+    buildCommand: npm ci && npm run build
+    # "npm start" runs the database migrations first (see the prestart script), then next start.
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+      # The free instance has 512 MB: keep the build and the server inside it.
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=384
+      # Neon connection string (the "direct" one, not the pooled one). Set in the dashboard.
+      - key: DATABASE_URL
+        sync: false
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: QR_TOKEN_SECRET
+        generateValue: true
+      # Creates the first owner when the database is empty. Set in the dashboard.
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      # One proxy in front of the app. Raise ORDER_RATE_LIMIT if many customers share one address.
+      - key: TRUST_PROXY_HOPS
+        value: 1
+      - key: ORDER_RATE_LIMIT
+        value: 120

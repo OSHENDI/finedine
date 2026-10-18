@@ -1,0 +1,19 @@
+{
+  "name": "families-logo-animation",
+  "private": true,
+  "scripts": {
+    "layers": "node scripts/extract-layers.mjs && node scripts/vectorize.mjs",
+    "studio": "remotion studio",
+    "render": "remotion render FamiliesLogo out/families-logo-9x16.mp4 --codec=h264 --crf=12 --x264-preset=veryslow --color-space=bt709 --pixel-format=yuv420p"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.536",
+    "@remotion/motion-blur": "^4.0.536",
+    "@remotion/paths": "^4.0.536",
+    "potrace": "^2.1.8",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.536",
+    "sharp": "^0.35.5"
+  }
+}

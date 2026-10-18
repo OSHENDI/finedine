@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-17T00:00:00Z",
+  "title": "Design System: FineDine Customer Ordering",
+  "extensions": {
+    "colorMeta": {
+      "primary-500": { "role": "primary", "displayName": "Cherry Pink", "canonical": "#cd3266", "tonalRamp": ["#290a14", "#521429", "#7b1e3d", "#a42851", "#cd3266", "#d75b84", "#e184a3", "#f5d6e0"] },
+      "primary-600": { "role": "primary", "displayName": "Raspberry Text", "canonical": "#a42851", "tonalRamp": ["#290a14", "#521429", "#7b1e3d", "#a42851", "#cd3266", "#d75b84", "#e184a3", "#f5d6e0"] },
+      "secondary-500": { "role": "secondary", "displayName": "Amber", "canonical": "#e3971c", "tonalRamp": ["#2d1e06", "#5b3c0b", "#885a11", "#b67916", "#e3971c", "#e9ac49", "#eec077", "#f9ead2"] },
+      "accent-600": { "role": "tertiary", "displayName": "Crimson", "canonical": "#aa223f", "tonalRamp": ["#2b0810", "#551120", "#80192f", "#aa223f", "#d52a4f", "#dd5572", "#e67f95", "#f7d4dc"] },
+      "background-50": { "role": "neutral", "displayName": "Cream", "canonical": "#faf7ea", "tonalRamp": ["#2a2309", "#534613", "#7d691c", "#a68d26", "#d0b02f", "#d9c059", "#ecdfac", "#f6efd5"] },
+      "text-900": { "role": "neutral", "displayName": "Cocoa Ink", "canonical": "#231510", "tonalRamp": ["#231510", "#462a20", "#693f30", "#8c5440", "#af6950", "#bf8773", "#cfa596", "#efe1dc"] }
+    },
+    "typographyMeta": {
+      "headline": { "displayName": "Headline", "purpose": "Order status title, 900 weight." },
+      "title": { "displayName": "Title", "purpose": "Menu heading and screen heads, 26 to 30px, 900." },
+      "item-name": { "displayName": "Item name", "purpose": "Row and cart line names, 700." },
+      "price": { "displayName": "Price", "purpose": "Prices in primary-600, 900." },
+      "body": { "displayName": "Body", "purpose": "Form and general copy; Arabic line-height 1.75." },
+      "description": { "displayName": "Description", "purpose": "Two-line clamp in rows, soft cocoa; 15px in Arabic." },
+      "label": { "displayName": "Label", "purpose": "Chips, sublabels, helper text, 13 to 14px, 700." }
+    },
+    "darkPalette": {
+      "note": "Applied under prefers-color-scheme: dark on .fd. Each scale inverts (50 becomes darkest). primary-500, secondary-500 and accent-500 keep the same value.",
+      "text": ["#120a08", "#231510", "#462a20", "#6a3f2f", "#8d543f", "#b0694f", "#c08772", "#d0a595", "#dfc3b9", "#efe1dc", "#f7f0ed"],
+      "background": ["#141305", "#29250a", "#524a14", "#7a701f", "#a39529", "#ccba33", "#d6c85c", "#e0d685", "#ebe3ad", "#f5f1d6", "#faf8eb"],
+      "primary": ["#15050a", "#290a14", "#521429", "#7b1e3d", "#a42851", "#cd3266", "#d75b84", "#e184a3", "#ebadc2", "#f5d6e0", "#faeaf0"],
+      "secondary": ["#170f03", "#2d1e06", "#5b3c0b", "#885a11", "#b67916", "#e3971c", "#e9ac49", "#eec077", "#f4d5a4", "#f9ead2", "#fcf5e8"],
+      "accent": ["#150408", "#2b0810", "#551120", "#80192f", "#aa223f", "#d52a4f", "#dd5572", "#e67f95", "#eeaab9", "#f7d4dc", "#fbeaed"],
+      "scaleOrder": "50,100,200,300,400,500,600,700,800,900,950",
+      "roleOverrides": { "c-control": "text-500", "c-on-amber": "#231510", "c-surface": "#1f1c08", "c-soft": "#2d290c", "c-primary-text": "primary-700", "c-ok": "#58c98b", "c-focus": "primary-700", "c-shadow": "rgba(0, 0, 0, 0.45)" }
+    },
+    "roleTokens": {
+      "c-bg": "background-50", "c-surface": "#ffffff", "c-soft": "background-100", "c-ink": "text-900", "c-ink-soft": "text-600",
+      "c-line": "color-mix(in srgb, text-900 11%, transparent)", "c-control": "text-400", "c-primary": "primary-500", "c-primary-text": "primary-600",
+      "c-on-primary": "#ffffff", "c-amber": "secondary-500", "c-on-amber": "text-900", "c-danger": "accent-600", "c-ok": "#1f7a4d",
+      "c-focus": "primary-600", "c-shadow": "rgba(66, 30, 20, 0.12)"
+    },
+    "gradients": [
+      { "name": "grad-primary-secondary", "value": "linear-gradient(135deg, #d03a6c, #e59f2d)", "purpose": "Photo placeholder and empty-cart icon." },
+      { "name": "grad-primary-accent", "value": "linear-gradient(135deg, #d03a6c, #8c1c35)", "purpose": "Logo, cart bar, hero card, status card." },
+      { "name": "grad-secondary-accent", "value": "linear-gradient(135deg, #e59f2d, #8c1c35)", "purpose": "Declared brand gradient; unused in the current build." }
+    ],
+    "shadows": [
+      { "name": "row-lift", "value": "0 1px 0 var(--c-line), 0 10px 26px -14px var(--c-shadow)", "purpose": "Item rows and cart lines." },
+      { "name": "dock-lift", "value": "0 0 0 1px var(--c-line), 0 14px 30px -14px var(--c-shadow)", "purpose": "Category bar." },
+      { "name": "pink-glow", "value": "0 8px 18px -8px var(--c-primary)", "purpose": "Add button; primary button uses 0 12px 24px -12px." },
+      { "name": "crimson-glow", "value": "0 14px 28px -12px rgba(140, 28, 53, 0.65)", "purpose": "Cart bar; hero card 0 18px 32px -18px, status card 0 22px 40px -22px." },
+      { "name": "ring", "value": "inset 0 0 0 1.5px var(--c-control)", "purpose": "Unselected input, choice, check and payment option outline; 2px primary when selected or focused." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Single easing for all motion." },
+      { "name": "sheet-in", "value": "360ms, translateY(48px) and fade", "purpose": "Native dialog sheet slide-up; backdrop fades 240ms." },
+      { "name": "cart-rise", "value": "380ms, translateY(16px) and fade", "purpose": "Cart bar entrance." },
+      { "name": "press", "value": "220ms, scale(0.9) add / scale(0.98) button", "purpose": "Tap feedback." },
+      { "name": "bell-ring", "value": "1.6s ease-in-out infinite rotate keyframes", "purpose": "Ready state of the status card." },
+      { "name": "reduced-motion", "value": "animation: none; transition: none under prefers-reduced-motion: reduce", "purpose": "Disables every animation and transition in .fd." }
+    ],
+    "breakpoints": []
+  },
+  "components": [
+    {
+      "name": "Item Row",
+      "kind": "card",
+      "refersTo": "item-row",
+      "description": "Menu item: photo at start, name, description, price, round add button.",
+      "html": "<div class=\"ds-row\"><div class=\"ds-photo\"></div><div class=\"ds-main\"><div class=\"ds-name\">Pistachio cone</div><div class=\"ds-desc\">Roasted pistachio and cream in a crisp cone.</div></div><div class=\"ds-foot\"><span class=\"ds-price\">24.00</span><button class=\"ds-add\" aria-label=\"Add\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"><path d=\"M12 5v14M5 12h14\"/></svg></button></div></div>",
+      "css": ".ds-row { display: grid; grid-template-columns: 96px 1fr; column-gap: 14px; padding: 12px; border-radius: 22px; background: #fff; color: #231510; box-shadow: 0 1px 0 rgba(35,21,16,0.11), 0 10px 26px -14px rgba(66,30,20,0.12); font-family: inherit; } .ds-photo { grid-row: 1 / span 2; width: 96px; height: 96px; border-radius: 18px; background: linear-gradient(135deg, #d03a6c, #e59f2d); } .ds-name { font-size: 17px; font-weight: 700; line-height: 1.35; } .ds-desc { font-size: 14px; line-height: 1.6; color: #8c5440; } .ds-foot { display: flex; align-items: center; justify-content: space-between; min-height: 46px; margin-block-start: 4px; } .ds-price { color: #a42851; font-size: 18px; font-weight: 900; } .ds-add { display: grid; place-items: center; width: 46px; height: 46px; border: 0; border-radius: 50%; background: #cd3266; color: #fff; box-shadow: 0 8px 18px -8px #cd3266; cursor: pointer; transition: transform 220ms cubic-bezier(0.16,1,0.3,1); } .ds-add:active { transform: scale(0.9); } .ds-add:focus-visible { outline: 3px solid #a42851; outline-offset: 2px; }"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "custom",
+      "refersTo": "button-primary",
+      "description": "Full-width pink pill for the single main action on a screen.",
+      "html": "<button class=\"ds-btn\">Place order</button> <button class=\"ds-btn ds-btn-soft\">Back to menu</button>",
+      "css": ".ds-btn { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 54px; padding-inline: 24px; border: 0; border-radius: 999px; background: #cd3266; color: #fff; font: inherit; font-size: 17px; font-weight: 700; box-shadow: 0 12px 24px -12px #cd3266; cursor: pointer; transition: transform 220ms cubic-bezier(0.16,1,0.3,1), opacity 220ms; } .ds-btn:active { transform: scale(0.98); } .ds-btn:focus-visible { outline: 3px solid #a42851; outline-offset: 2px; } .ds-btn-soft { margin-block-start: 10px; background: #f6efd5; color: #231510; box-shadow: none; }"
+    },
+    {
+      "name": "Bottom Dock",
+      "kind": "nav",
+      "refersTo": "category-pill",
+      "description": "Cart bar over a scrollable category pill bar.",
+      "html": "<div class=\"ds-dock\"><div class=\"ds-cartbar\"><span>3 items</span><strong>72.00</strong></div><div class=\"ds-cats\"><button class=\"ds-cat\" aria-pressed=\"true\">Cones</button><button class=\"ds-cat\" aria-pressed=\"false\">Cups</button><button class=\"ds-cat\" aria-pressed=\"false\">Drinks</button></div></div>",
+      "css": ".ds-dock { display: grid; gap: 10px; max-width: 536px; font-family: inherit; } .ds-cartbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-radius: 20px; background: linear-gradient(135deg, #d03a6c, #8c1c35); color: #fff; font-weight: 700; box-shadow: 0 14px 28px -12px rgba(140,28,53,0.65); } .ds-cartbar strong { font-size: 18px; font-weight: 900; } .ds-cats { display: flex; gap: 4px; padding: 6px; border-radius: 999px; background: #fff; box-shadow: 0 0 0 1px rgba(35,21,16,0.11), 0 14px 30px -14px rgba(66,30,20,0.12); } .ds-cat { min-height: 44px; padding-inline: 18px; border: 0; border-radius: 999px; background: none; color: #8c5440; font: inherit; font-weight: 500; cursor: pointer; transition: background 220ms, color 220ms; } .ds-cat[aria-pressed=\"true\"] { background: #cd3266; color: #fff; font-weight: 700; } .ds-cat:focus-visible { outline: 3px solid #a42851; outline-offset: 2px; }"
+    },
+    {
+      "name": "Stepper",
+      "kind": "custom",
+      "refersTo": "stepper",
+      "description": "Quantity control in a butter pill.",
+      "html": "<div class=\"ds-stepper\"><button aria-label=\"Less\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"><path d=\"M5 12h14\"/></svg></button><output>2</output><button aria-label=\"More\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"><path d=\"M12 5v14M5 12h14\"/></svg></button></div>",
+      "css": ".ds-stepper { display: inline-flex; align-items: center; gap: 4px; padding: 4px; border-radius: 999px; background: #f6efd5; color: #231510; font-family: inherit; } .ds-stepper button { display: grid; place-items: center; width: 42px; height: 42px; border: 0; border-radius: 50%; background: #fff; color: inherit; box-shadow: 0 0 0 1px rgba(35,21,16,0.11); cursor: pointer; } .ds-stepper button:focus-visible { outline: 3px solid #a42851; outline-offset: 2px; } .ds-stepper output { min-width: 34px; text-align: center; font-weight: 900; font-size: 18px; }"
+    },
+    {
+      "name": "Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Labelled text input with inset ring; focus thickens to pink.",
+      "html": "<label class=\"ds-field\">Name<input class=\"ds-input\" placeholder=\"Your name\"></label>",
+      "css": ".ds-field { display: grid; gap: 6px; font-weight: 700; color: #231510; font-family: inherit; } .ds-input { width: 100%; min-height: 52px; padding: 12px 16px; border: 0; border-radius: 16px; background: #fff; color: #231510; font: inherit; font-weight: 500; box-shadow: inset 0 0 0 1.5px #bf8773; box-sizing: border-box; } .ds-input::placeholder { color: #8c5440; opacity: 1; } .ds-input:focus { outline: none; box-shadow: inset 0 0 0 2px #cd3266; }"
+    },
+    {
+      "name": "Payment Option",
+      "kind": "custom",
+      "refersTo": "payment-option",
+      "description": "Selectable payment method with icon well and radio; selected state shown.",
+      "html": "<label class=\"ds-pay\"><span class=\"ds-pay-icon\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"><rect x=\"3\" y=\"6.5\" width=\"18\" height=\"11\" rx=\"2\"/><circle cx=\"12\" cy=\"12\" r=\"2.5\"/></svg></span><span class=\"ds-pay-text\"><strong>Cash</strong><small>Pay at the counter</small></span><span class=\"ds-radio\"></span></label>",
+      "css": ".ds-pay { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 18px; background: color-mix(in srgb, #cd3266 8%, #fff); box-shadow: inset 0 0 0 2px #cd3266; color: #231510; font-family: inherit; cursor: pointer; } .ds-pay-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: #f6efd5; color: #a42851; } .ds-pay-text { display: grid; } .ds-pay-text strong { font-weight: 700; } .ds-pay-text small { color: #8c5440; font-size: 13px; } .ds-radio { margin-inline-start: auto; width: 24px; height: 24px; border-radius: 50%; box-shadow: inset 0 0 0 7px #cd3266; }"
+    },
+    {
+      "name": "Hero Card",
+      "kind": "card",
+      "refersTo": "hero-card",
+      "description": "Crimson gradient brand card with icon tile and headline.",
+      "html": "<div class=\"ds-hero\"><span class=\"ds-hero-icon\"><svg width=\"26\" height=\"26\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"><path d=\"M5 12.5l4.5 4.5L19 7.5\"/></svg></span><strong>Order received</strong></div>",
+      "css": ".ds-hero { display: flex; align-items: center; gap: 16px; padding: 20px; border-radius: 22px; background: linear-gradient(135deg, #d03a6c, #8c1c35); color: #fff; box-shadow: 0 18px 32px -18px rgba(140,28,53,0.7); font-family: inherit; } .ds-hero-icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; background: rgba(255,255,255,0.2); flex: none; } .ds-hero strong { font-size: 24px; font-weight: 900; line-height: 1.25; }"
+    },
+    {
+      "name": "Status Timeline",
+      "kind": "custom",
+      "refersTo": "timeline-dot-current",
+      "description": "Vertical steps: done pink, current amber with halo, upcoming butter.",
+      "html": "<ol class=\"ds-timeline\"><li class=\"ds-step\" data-state=\"done\"><span class=\"ds-dot\">1</span><strong>Payment confirmed</strong></li><li class=\"ds-step\" data-state=\"current\"><span class=\"ds-dot\">2</span><strong>Preparing</strong></li><li class=\"ds-step\" data-state=\"upcoming\"><span class=\"ds-dot\">3</span><strong>Ready</strong></li></ol>",
+      "css": ".ds-timeline { list-style: none; margin: 0; padding: 0; display: grid; color: #231510; font-family: inherit; } .ds-step { position: relative; display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: start; padding-block-end: 22px; } .ds-step:last-child { padding-block-end: 0; } .ds-step::before { content: ''; position: absolute; inset-block: 40px 0; inset-inline-start: 19px; width: 2px; background: rgba(35,21,16,0.11); } .ds-step:last-child::before { display: none; } .ds-step[data-state=done]::before { background: #cd3266; } .ds-dot { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #f6efd5; color: #8c5440; font-weight: 900; } .ds-step[data-state=done] .ds-dot { background: #cd3266; color: #fff; } .ds-step[data-state=current] .ds-dot { background: #e3971c; color: #231510; box-shadow: 0 0 0 6px rgba(227,151,28,0.26); } .ds-step strong { font-size: 17px; font-weight: 700; line-height: 1.4; padding-block-start: 6px; } .ds-step[data-state=upcoming] strong { color: #8c5440; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Parlour Counter",
+    "overview": "A warm ice-cream-parlour ordering counter. Cream ground, white rows that sit on it with a soft lifted shadow, cherry pink as the single action colour, amber for \"this is happening now\". The menu is the first thing on screen and the whole job is add, review, pay, wait. There is no marketing banner. The system is built for one hand on a phone, often in dim light, in Arabic (right to left) or English (left to right) with one stylesheet. The phone's colour-scheme setting swaps the whole palette to an olive-black dark set. Out of scope: the admin screens (app/globals.css), a separate unredesigned surface.",
+    "keyCharacteristics": [
+      "Cream ground, white rows, pink action, amber current-state.",
+      "Pill buttons and 22px rows; photos at 18px inside them.",
+      "Thmanyah Sans only, weights 400 to 900.",
+      "One outline icon family: 24px grid, 1.8 stroke, inline SVG.",
+      "Logical CSS properties only, so rtl and ltr share one stylesheet.",
+      "Crimson gradient reserved for brand moments: logo, cart bar, hero card, status card."
+    ],
+    "rules": [
+      { "name": "The One Action Colour Rule", "body": "Pink is the only colour that means \"press this\". Amber and green are state, never action.", "section": "colors" },
+      { "name": "The Role Token Rule", "body": "Components consume --c-* roles, not scale steps, so the dark set swaps without touching components.", "section": "colors" },
+      { "name": "The Gradient Reserve Rule", "body": "The crimson gradient marks brand moments (identity, the cart, the two hero cards). It is not a decoration for ordinary rows, buttons or headings.", "section": "colors" },
+      { "name": "The Weight Carries It Rule", "body": "Hierarchy comes from weight and size inside one family. No second typeface, no letter-spaced uppercase labels.", "section": "typography" },
+      { "name": "The One Language Per Line Rule", "body": "Arabic and English are never shown in one line or one string. The language switch changes the whole screen.", "section": "typography" },
+      { "name": "The Eastern Digits Rule", "body": "In Arabic, every number is formatted with the ar-EG locale so digits are Arabic-Indic; English uses Latin digits. Formatting lives in lib/i18n.ts.", "section": "typography" },
+      { "name": "The Soft Lift Rule", "body": "Shadows are long, low-opacity and negatively spread. No hard offset shadows.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do take every colour from a --c-* role; use --c-primary-text for pink text, --c-primary for fills.",
+      "Do write logical properties only (inline/block, start/end) and mirror directional icons with fd-flip.",
+      "Do show one language per screen, format numbers through lib/i18n.ts, and use Arabic-Indic digits in Arabic.",
+      "Do keep tap targets at 44px or more and keep the 3px pink focus outline.",
+      "Do use the separator dot element (fd-sep) between facts; a typed middle dot reads as an Arabic zero.",
+      "Do use the single outline icon set (24px grid, 1.8 stroke).",
+      "Do gate every animation behind the reduced-motion override already in the stylesheet."
+    ],
+    "donts": [
+      "Don't put Arabic and English in one line, one label or one string.",
+      "Don't add UI for features that do not exist: no tax line, no estimated-time display, no call-waiter button, no card payment.",
+      "Don't use pink for anything that is not an action, price or selection; use amber only for the current state.",
+      "Don't spread the crimson gradient onto ordinary rows, buttons or headings.",
+      "Don't use left/right, margin-left, padding-right or physical text alignment inside .fd.",
+      "Don't style admin screens from this system, and don't let .fd rules or variables leak outside the scope."
+    ]
+  }
+}

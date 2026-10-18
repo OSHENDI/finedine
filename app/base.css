@@ -1,0 +1,236 @@
+/* Shared foundation for every screen under .fd (customer and staff): palette, type, resets and the
+   few controls both sides use. The app has one theme, light. Direction-aware: logical properties
+   only, so Arabic (rtl) and English (ltr) share one stylesheet. */
+
+.fd {
+  /* Owner-supplied palette. */
+  --text-50: #f7f0ee; --text-100: #efe1dc; --text-200: #dfc3b9; --text-300: #cfa596; --text-400: #bf8773;
+  --text-500: #af6950; --text-600: #8c5440; --text-700: #693f30; --text-800: #462a20; --text-900: #231510; --text-950: #110b08;
+  --background-50: #faf7ea; --background-100: #f6efd5; --background-200: #ecdfac; --background-300: #e3cf82; --background-400: #d9c059;
+  --background-500: #d0b02f; --background-600: #a68d26; --background-700: #7d691c; --background-800: #534613; --background-900: #2a2309; --background-950: #151205;
+  --primary-50: #faeaf0; --primary-100: #f5d6e0; --primary-200: #ebadc2; --primary-300: #e184a3; --primary-400: #d75b84;
+  --primary-500: #cd3266; --primary-600: #a42851; --primary-700: #7b1e3d; --primary-800: #521429; --primary-900: #290a14; --primary-950: #15050a;
+  --secondary-50: #fcf5e8; --secondary-100: #f9ead2; --secondary-200: #f4d5a4; --secondary-300: #eec077; --secondary-400: #e9ac49;
+  --secondary-500: #e3971c; --secondary-600: #b67916; --secondary-700: #885a11; --secondary-800: #5b3c0b; --secondary-900: #2d1e06; --secondary-950: #170f03;
+  --accent-50: #fbeaed; --accent-100: #f7d4dc; --accent-200: #eeaab9; --accent-300: #e67f95; --accent-400: #dd5572;
+  --accent-500: #d52a4f; --accent-600: #aa223f; --accent-700: #80192f; --accent-800: #551120; --accent-900: #2b0810; --accent-950: #150408;
+
+  /* Gradients run along the line of reading: from the start edge to the end edge. */
+  --end: right;
+  --grad-primary-secondary: linear-gradient(to var(--end), #d03a6c, #e59f2d);
+  --grad-primary-accent: linear-gradient(to var(--end), #d03a6c, #8c1c35);
+  --grad-secondary-accent: linear-gradient(to var(--end), #e59f2d, #8c1c35);
+
+  /* Roles. Every colour in the components comes from here. Surfaces are told apart by tone, not by
+     borders or shadows. */
+  --c-bg: var(--background-50);
+  --c-surface: #ffffff;
+  --c-soft: var(--background-100);
+  --c-ink: var(--text-900);
+  --c-ink-soft: var(--text-600);
+  --c-line: color-mix(in srgb, var(--text-900) 11%, transparent);
+  --c-control: var(--text-400);
+  --c-primary: var(--primary-500);
+  --c-primary-text: var(--primary-600);
+  --c-on-primary: #ffffff;
+  --c-amber: var(--secondary-500);
+  --c-on-amber: var(--text-900);
+  --c-danger: var(--accent-600);
+  --c-ok: #1f7a4d;
+  --c-focus: var(--primary-600);
+
+  /* A hairline that fades out at both ends: the separator used instead of boxes and borders. */
+  --rule: linear-gradient(to right, transparent, color-mix(in srgb, var(--text-900) 16%, transparent) 14%, color-mix(in srgb, var(--text-900) 16%, transparent) 86%, transparent);
+
+  --radius-card: 22px;
+  --radius-sheet: 28px;
+  --ease-out: cubic-bezier(0.25, 0.6, 0.35, 1);
+
+  color-scheme: light;
+}
+
+.fd[dir="rtl"] {
+  --end: left;
+}
+
+.fd,
+.fd *,
+.fd *::before,
+.fd *::after {
+  box-sizing: border-box;
+}
+
+/* Thmanyah Sans everywhere, including form controls. */
+.fd,
+.fd :is(button, input, textarea, select, output) {
+  font-family: var(--font-brand), system-ui, sans-serif;
+}
+
+.fd {
+  min-height: 100dvh;
+  background: var(--c-bg);
+  color: var(--c-ink);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+  text-size-adjust: 100%;
+  font-variant-numeric: lining-nums;
+}
+
+/* Arabic letterforms are taller: a looser line keeps marks from touching the next line. */
+.fd[lang="ar"] {
+  line-height: 1.7;
+}
+
+/* Resets sit in :where() so they have zero specificity and never beat a component class. */
+:where(.fd) :where(h1, h2, h3, p, ol, ul, figure) {
+  margin: 0;
+}
+
+:where(.fd) :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+:where(.fd) :where(button, input, textarea, select) {
+  font: inherit;
+  color: inherit;
+}
+
+:where(.fd) button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+:where(.fd) button:disabled {
+  cursor: not-allowed;
+}
+
+.fd-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Small separator dot between facts; a typed "·" can read as a zero in Arabic type. */
+.fd-sep::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin-inline: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  vertical-align: middle;
+  opacity: 0.6;
+}
+
+.fd :focus-visible {
+  outline: 3px solid var(--c-focus);
+  outline-offset: 2px;
+}
+
+.fd ::selection {
+  background: color-mix(in srgb, var(--c-primary) 28%, transparent);
+}
+
+.fd-icon {
+  flex: none;
+}
+
+.fd[dir="rtl"] .fd-flip {
+  transform: scaleX(-1);
+}
+
+/* Shared by the staff shell. */
+.fd-logo {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--grad-primary-accent);
+  color: #fff;
+  font-weight: 900;
+  font-size: 19px;
+}
+
+.fd-pill-btn,
+.fd-icon-btn {
+  display: inline-grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 14px;
+  background: var(--c-soft);
+  font-weight: 700;
+  position: relative;
+}
+
+.fd-pill-btn {
+  padding-inline: 16px;
+}
+
+.fd-field {
+  display: grid;
+  gap: 6px;
+  font-weight: 700;
+}
+
+.fd-field small {
+  color: var(--c-ink-soft);
+  font-weight: 500;
+}
+
+/* Fields are filled, not outlined: tone separates them from the page. */
+.fd-input {
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--c-soft);
+  font-weight: 500;
+}
+
+textarea.fd-input {
+  min-height: 92px;
+  resize: vertical;
+}
+
+.fd-input:focus {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 0;
+  background: var(--c-surface);
+}
+
+.fd-input::placeholder {
+  color: var(--c-ink-soft);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fd *,
+  .fd *::before,
+  .fd *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Outside .fd: the page itself. */
+body {
+  margin: 0;
+  background: #faf7ea;
+  font-family: var(--font-brand), system-ui, sans-serif;
+}
+
+a {
+  color: inherit;
+}

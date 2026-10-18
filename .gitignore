@@ -1,0 +1,17 @@
+node_modules
+.next
+out
+dist
+.env
+.env*.local
+*.log
+dev.db
+data
+.pgdata
+.pgdata*
+.uploads
+tsconfig.tsbuildinfo
+AGENTS.md
+.local-secret
+.claude
+logo-animation/out
