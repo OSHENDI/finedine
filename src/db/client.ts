@@ -21,7 +21,9 @@ export function getDbState(): DbState {
 
   const url = process.env.DATABASE_URL;
   if (url?.startsWith("postgres://") || url?.startsWith("postgresql://")) {
-    const client = postgres(url, { max: 10, prepare: false });
+    // Idle connections are closed after 20 s and recycled every 30 min, so a database that scales to
+    // zero (Neon) is never handed a socket it has already dropped, and a cold start (a few seconds) is waited out.
+    const client = postgres(url, { max: Number(process.env.DB_POOL_MAX) || 10, prepare: false, idle_timeout: 20, max_lifetime: 60 * 30, connect_timeout: 30 });
     globalForDb.fineDineDb = {
       db: drizzlePostgres(client, { schema }),
       client,

@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "local": "node scripts/local.mjs",
-    "build": "next build",
+    "build": "next build --webpack",
     "prestart": "node --env-file-if-exists=.env scripts/migrate.mjs",
     "start": "next start",
     "lint": "eslint .",

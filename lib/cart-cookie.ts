@@ -47,7 +47,10 @@ export function decodeCart(raw: string | undefined | null): CartSnapshot {
   }
 }
 
+// Cookies written by the browser are Secure on https (the live site) and plain on http (localhost).
+export const secureFlag = () => (typeof location !== "undefined" && location.protocol === "https:" ? "; secure" : "");
+
 export function writeCookie(name: string, value: string | null) {
-  const attributes = `path=/; samesite=lax; max-age=${value === null ? 0 : cookieMaxAge}`;
+  const attributes = `path=/; samesite=lax; max-age=${value === null ? 0 : cookieMaxAge}${secureFlag()}`;
   document.cookie = `${name}=${value ?? ""}; ${attributes}`;
 }

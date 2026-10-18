@@ -1,9 +1,12 @@
+import type { Metadata } from "next";
 import "../admin.css";
 import { redirect } from "next/navigation";
 import AdminShell from "@/components/admin/AdminShell";
 import { getSession } from "@/lib/auth";
 import { requestLang } from "@/lib/request-lang";
 import { getFirstBranchForBusiness } from "@/lib/store";
+
+export const metadata: Metadata = { title: "FineDine | Staff", robots: { index: false, follow: false } };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();

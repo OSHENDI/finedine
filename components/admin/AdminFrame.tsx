@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { secureFlag } from "@/lib/cart-cookie";
 import { formatPrice, numberFormat, plainNumber } from "@/lib/i18n";
 import { adminText, langCookie, type AdminText, type Lang } from "@/lib/i18n-admin";
 
@@ -28,7 +29,7 @@ export default function AdminFrame({ initialLang, className, children }: { initi
   const switchLanguage = useCallback(() => {
     const next: Lang = lang === "ar" ? "en" : "ar";
     setLang(next);
-    document.cookie = `${langCookie}=${next}; path=/; max-age=31536000; samesite=lax`;
+    document.cookie = `${langCookie}=${next}; path=/; max-age=31536000; samesite=lax${secureFlag()}`;
   }, [lang]);
 
   const value = useMemo<AdminContext>(

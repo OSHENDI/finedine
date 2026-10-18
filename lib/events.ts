@@ -13,7 +13,11 @@ const globalForBus = globalThis as unknown as { fineDineBus?: EventEmitter; fine
 const bus = (globalForBus.fineDineBus ??= new EventEmitter().setMaxListeners(0));
 const NOTIFY_CHANNEL = "finedine_events";
 
+// LIVE_UPDATES=memory keeps updates inside this process: right for a single instance (the free Render
+// plan), and it leaves no connection open, so a serverless database (Neon) can scale to zero when idle.
+// Leave it unset when several app instances share one database.
 function postgresClient() {
+  if (process.env.LIVE_UPDATES === "memory") return null;
   const state = getDbState();
   return state.mode === "postgres" ? (state.client as ReturnType<typeof postgres>) : null;
 }

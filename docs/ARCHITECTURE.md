@@ -58,4 +58,4 @@ A table QR opens `/t/k7q3-xm9d-4trb`: 12 base32 characters derived from the QR r
 ## Checks
 
 `npm run typecheck`, `npm run lint`, `npm run test:integration` (in-memory database),
-`npm run build`. `.github/workflows/ci.yml` runs all four on every push.
+`npm run build`. `.github/workflows/ci.yml` runs all four on every push, and on `main` also publishes the built site to the `release` branch, which Render deploys (see `docs/DEPLOY.md`).

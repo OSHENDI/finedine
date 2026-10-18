@@ -1,15 +1,19 @@
 # Render Blueprint: one free web service that deploys from GitHub on every push.
 # New > Blueprint in the Render dashboard, pick this repository, and Render reads this file.
-# Secrets marked sync:false are asked for once in the dashboard; generated ones are created for you.
+#
+# Render does not build the site (the free plan has too little memory for it). GitHub Actions builds it
+# and publishes the result to the `release` branch (see .github/workflows/ci.yml); Render installs the
+# production dependencies from that branch and starts it. Secrets marked sync:false are asked for once
+# in the dashboard; generated ones are created for you.
 services:
   - type: web
     name: finedine
     runtime: node
     plan: free
     region: frankfurt
-    branch: main
+    branch: release
     autoDeployTrigger: commit
-    buildCommand: npm ci && npm run build
+    buildCommand: npm ci --omit=dev
     # "npm start" runs the database migrations first (see the prestart script), then next start.
     startCommand: npm start
     healthCheckPath: /api/health
@@ -20,9 +24,6 @@ services:
         value: production
       - key: NEXT_TELEMETRY_DISABLED
         value: "1"
-      # The free instance has 512 MB: keep the build and the server inside it.
-      - key: NODE_OPTIONS
-        value: --max-old-space-size=384
       # Neon connection string (the "direct" one, not the pooled one). Set in the dashboard.
       - key: DATABASE_URL
         sync: false
@@ -35,6 +36,9 @@ services:
         sync: false
       - key: ADMIN_PASSWORD
         sync: false
+      # One instance: live updates stay in this process, and the database can scale to zero when idle.
+      - key: LIVE_UPDATES
+        value: memory
       # One proxy in front of the app. Raise ORDER_RATE_LIMIT if many customers share one address.
       - key: TRUST_PROXY_HOPS
         value: 1

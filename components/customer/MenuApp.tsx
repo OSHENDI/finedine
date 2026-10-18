@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { orderCookie, writeCookie, type CartSnapshot } from "@/lib/cart-cookie";
+import { orderCookie, secureFlag, writeCookie, type CartSnapshot } from "@/lib/cart-cookie";
 import { formatPrice, itemCount, langCookie, localized, localizeTable, numberFormat, text, type Lang } from "@/lib/i18n";
 import type { BranchView, CategoryView, PaymentMethodView, ProductView } from "@/types/menu";
 import IconButton from "@/components/ui/IconButton";
@@ -154,7 +154,7 @@ export default function MenuApp({
   function switchLanguage() {
     const next: Lang = lang === "ar" ? "en" : "ar";
     setLang(next);
-    document.cookie = `${langCookie}=${next}; path=/; max-age=31536000; samesite=lax`;
+    document.cookie = `${langCookie}=${next}; path=/; max-age=31536000; samesite=lax${secureFlag()}`;
   }
 
   function selectView(id: string) {
