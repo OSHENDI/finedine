@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "images": {
+    "deviceSizes": [
+      360,
+      480,
+      640,
+      828
+    ],
+    "imageSizes": [
+      76,
+      144,
+      240,
+      320
+    ],
+    "path": "/_next/image",
+    "loader": "default",
+    "loaderFile": "",
+    "domains": [],
+    "disableStaticImages": false,
+    "minimumCacheTTL": 2592000,
+    "formats": [
+      "image/webp"
+    ],
+    "maximumRedirects": 3,
+    "maximumResponseBody": 50000000,
+    "dangerouslyAllowLocalIP": false,
+    "dangerouslyAllowSVG": false,
+    "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;",
+    "contentDispositionType": "attachment",
+    "localPatterns": [
+      {
+        "pathname": "^(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?)\\/?)$",
+        "search": ""
+      }
+    ],
+    "remotePatterns": [
+      {
+        "protocol": "https",
+        "hostname": "^(?:^(?:images\\.unsplash\\.com)$)$",
+        "pathname": "^(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?)\\/?)$"
+      }
+    ],
+    "qualities": [
+      75
+    ],
+    "unoptimized": false,
+    "customCacheHandler": false,
+    "sizes": [
+      360,
+      480,
+      640,
+      828,
+      76,
+      144,
+      240,
+      320
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+User-Agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /login
+Disallow: /order/
+Disallow: /t/
+

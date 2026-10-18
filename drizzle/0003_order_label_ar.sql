@@ -1,0 +1,1 @@
+ALTER TABLE "orders" ADD COLUMN "payment_method_label_ar" text;
