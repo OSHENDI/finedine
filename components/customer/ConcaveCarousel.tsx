@@ -48,6 +48,7 @@ export default function ConcaveCarousel({
   const velocity = useRef(0);
   const dragging = useRef(false);
   const frame = useRef(0);
+  const widthRef = useRef(0);
   const touched = useRef(0);
   const directionSign = useRef(1);
   const latestPaused = useRef(paused);
@@ -60,7 +61,8 @@ export default function ConcaveCarousel({
     const x = position.current;
     const centre = Math.round(x);
     const first = cards.current.values().next().value as HTMLElement | undefined;
-    const width = first?.offsetWidth || 240;
+    if (first && !widthRef.current) widthRef.current = first.offsetWidth;
+    const width = widthRef.current || 240;
     // Chosen so the neighbour's near edge sits GAP px from the centre card's edge once it is turned.
     const radius = ((width / 2) * (1 + Math.cos(TURN)) + GAP) / Math.sin(TURN);
     cards.current.forEach((card, index) => {
@@ -104,9 +106,13 @@ export default function ConcaveCarousel({
     if (!element) return;
     directionSign.current = getComputedStyle(element).direction === "rtl" ? -1 : 1;
     draw();
-    window.addEventListener("resize", draw);
+    const resize = () => {
+      widthRef.current = 0;
+      draw();
+    };
+    window.addEventListener("resize", resize);
     return () => {
-      window.removeEventListener("resize", draw);
+      window.removeEventListener("resize", resize);
       cancelAnimationFrame(frame.current);
     };
   }, [draw]);
@@ -123,7 +129,7 @@ export default function ConcaveCarousel({
     let startX = 0;
     let moved = false;
     let wheelTimer = 0;
-    const stepPx = () => ((cards.current.values().next().value as HTMLElement | undefined)?.offsetWidth ?? 240) + GAP;
+    const stepPx = () => (widthRef.current || 240) + GAP;
 
     const down = (event: PointerEvent) => {
       dragging.current = true;

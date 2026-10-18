@@ -1,12 +1,23 @@
 "use client";
 
-import Image from "next/image";
+import Image, { type ImageLoaderProps } from "next/image";
 import { useState, type CSSProperties } from "react";
 import IconButton from "@/components/ui/IconButton";
 import Stepper from "@/components/ui/Stepper";
 import { formatPrice, localized, numberFormat, text, type Lang } from "@/lib/i18n";
 import type { ProductView } from "@/types/menu";
 import Icon from "@/components/ui/Icon";
+
+// Demo photos come straight from the image CDN at the width asked for, so the small free server never has to resize them.
+const cdnHost = "https://images.unsplash.com/";
+const cdnLoader = ({ src, width, quality }: ImageLoaderProps) => {
+  const url = new URL(src);
+  url.searchParams.set("w", String(width));
+  url.searchParams.set("q", String(quality ?? 70));
+  url.searchParams.set("auto", "format");
+  url.searchParams.set("fit", "crop");
+  return url.toString();
+};
 
 export function ProductPhoto({ product, sizes, priority }: { product: ProductView; sizes: string; priority?: boolean }) {
   if (!product.imageUrl) {
@@ -16,7 +27,20 @@ export function ProductPhoto({ product, sizes, priority }: { product: ProductVie
       </span>
     );
   }
-  return <Image alt="" className="fd-photo" draggable={false} fill priority={priority} sizes={sizes} src={product.imageUrl} unoptimized={product.imageUrl.startsWith("/api/media/")} />;
+  return (
+    <Image
+      alt=""
+      className="fd-photo"
+      draggable={false}
+      fetchPriority={priority ? "high" : undefined}
+      fill
+      loader={product.imageUrl.startsWith(cdnHost) ? cdnLoader : undefined}
+      priority={priority}
+      sizes={sizes}
+      src={product.imageUrl}
+      unoptimized={product.imageUrl.startsWith("/api/media/")}
+    />
+  );
 }
 
 // What a product needs to be added in one tap: no size to choose and no extras to offer.

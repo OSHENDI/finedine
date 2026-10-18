@@ -259,8 +259,8 @@ export default function CheckoutScreen({
 
             <div className="fd-field">
               {t.receipt}
+              {preview ? <img alt={t.receipt} className="fd-receipt-preview" src={preview} /> : null}
               <div className="fd-file">
-                {preview ? <img alt="" height={52} src={preview} width={52} /> : null}
                 <label data-proof={show("proof", proofBad) ? "true" : "false"} tabIndex={-1}>
                   <Icon name="upload" size={20} />
                   {receipt ? t.changeReceipt : t.chooseReceipt}

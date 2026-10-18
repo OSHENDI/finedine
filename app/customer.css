@@ -1663,3 +1663,18 @@ html[data-intro="leaving"] .fd-contents > * {
   max-width: 32ch;
   color: var(--c-ink-soft);
 }
+
+/* The home screen's main landmark adds no box of its own. */
+.fd-home {
+  display: contents;
+}
+
+/* The receipt photo chosen at checkout, shown large enough to read. */
+.fd-receipt-preview {
+  display: block;
+  width: 100%;
+  max-height: 260px;
+  border-radius: 14px;
+  background: var(--c-soft);
+  object-fit: contain;
+}

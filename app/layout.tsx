@@ -38,6 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html className={brand.variable} dir={lang === "ar" ? "rtl" : "ltr"} lang={lang} suppressHydrationWarning>
       <head>
+        <link href="https://images.unsplash.com" rel="preconnect" />
         <script dangerouslySetInnerHTML={{ __html: introGuard }} />
       </head>
       <body>{children}</body>

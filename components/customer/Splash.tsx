@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 // The brand animation is the first thing on screen. It is plain HTML in the server response, so
 // the browser starts the video before any script has loaded, and it keeps playing while the menu,
 // fonts and photos load underneath. It leaves only when all three are done: the video ended, the
-// page finished loading (fonts and first photos included), and the page was painted once.
+// fonts are ready, and the first photo is in (the rest of the page keeps loading underneath).
 // It plays once per browser tab; moving around the app never replays it.
 const markup = `<video autoplay muted playsinline preload="auto" poster="/intro-poster.jpg" src="/intro.mp4" aria-hidden="true"></video>`;
 
@@ -21,8 +21,11 @@ export default function Splash() {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const loaded = new Promise<void>((resolve) => {
-      if (document.readyState === "complete") resolve();
-      else window.addEventListener("load", () => resolve(), { once: true });
+      const photo = document.querySelector<HTMLImageElement>("img.fd-photo[fetchpriority='high']") ?? document.querySelector<HTMLImageElement>("img.fd-photo");
+      if (!photo || photo.complete) return resolve();
+      photo.addEventListener("load", () => resolve(), { once: true });
+      photo.addEventListener("error", () => resolve(), { once: true });
+      window.setTimeout(resolve, 3000);
     });
     const fonts = document.fonts?.ready.then(() => undefined) ?? Promise.resolve();
     const played = new Promise<void>((resolve) => {
