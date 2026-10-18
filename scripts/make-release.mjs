@@ -12,7 +12,7 @@ if (!existsSync(".next/BUILD_ID")) throw new Error("No build found: run `npm run
 
 rmSync(out, { recursive: true, force: true });
 mkdirSync(path.join(out, "scripts"), { recursive: true });
-cpSync(".next", path.join(out, ".next"), { recursive: true, filter: (source) => !source.split(path.sep).join("/").includes(".next/cache") });
+cpSync(".next", path.join(out, ".next"), { recursive: true, filter: (source) => !/[.]next[/](cache|dev)([/]|$)/.test(source.split(path.sep).join("/")) });
 for (const file of ["package.json", "package-lock.json", "next.config.mjs"]) cpSync(file, path.join(out, file));
 cpSync("drizzle", path.join(out, "drizzle"), { recursive: true });
 cpSync("public", path.join(out, "public"), { recursive: true });
