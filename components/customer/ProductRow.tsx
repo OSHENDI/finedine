@@ -19,7 +19,7 @@ const cdnLoader = ({ src, width, quality }: ImageLoaderProps) => {
   return url.toString();
 };
 
-export function ProductPhoto({ product, sizes, priority }: { product: ProductView; sizes: string; priority?: boolean }) {
+export function ProductPhoto({ product, sizes, priority, eager }: { product: ProductView; sizes: string; priority?: boolean; eager?: boolean }) {
   if (!product.imageUrl) {
     return (
       <span aria-hidden="true" className="fd-photo fd-photo--empty">
@@ -35,6 +35,7 @@ export function ProductPhoto({ product, sizes, priority }: { product: ProductVie
       fetchPriority={priority ? "high" : undefined}
       fill
       loader={product.imageUrl.startsWith(cdnHost) ? cdnLoader : undefined}
+      loading={eager ? "eager" : undefined}
       priority={priority}
       sizes={sizes}
       src={product.imageUrl}

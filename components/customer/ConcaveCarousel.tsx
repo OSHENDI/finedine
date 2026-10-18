@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { formatPrice, localized, type Lang } from "@/lib/i18n";
 import type { ProductView } from "@/types/menu";
 import Confetti from "./Confetti";
@@ -118,7 +118,7 @@ export default function ConcaveCarousel({
   }, [draw]);
 
   // Cards that just mounted (a new neighbour came into reach) get their place at once.
-  useEffect(() => draw(), [base, draw]);
+  useLayoutEffect(() => draw(), [base, draw]);
 
   // Dragging, flicking, the mouse wheel.
   useEffect(() => {
@@ -244,7 +244,7 @@ export default function ConcaveCarousel({
                 if (card) cards.current.set(index, card);
                 else cards.current.delete(index);
               }}
-              style={{ opacity: 0 } as CSSProperties}
+              style={{ opacity: index === 0 ? 1 : 0 } as CSSProperties}
             >
               <button
                 aria-label={localized(lang, product.nameEn, product.nameAr)}
@@ -253,7 +253,7 @@ export default function ConcaveCarousel({
                 onClick={() => (index === Math.round(position.current) ? onOpen(product) : turnTo(index))}
                 type="button"
               >
-                <ProductPhoto priority={index === 0} product={product} sizes="(max-width: 520px) 58vw, 260px" />
+                <ProductPhoto eager={Math.abs(index - base) <= 1} priority={index === 0} product={product} sizes="(max-width: 520px) 58vw, 260px" />
               </button>
             </div>
           );
