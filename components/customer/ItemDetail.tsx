@@ -85,6 +85,7 @@ export default function ItemDetail({
 
   // Drag the handle or the photo down to dismiss.
   function onPointerDown(event: React.PointerEvent) {
+    if ((event.target as HTMLElement).closest("button")) return;
     drag.current = { active: true, startY: event.clientY, lastY: event.clientY, lastT: performance.now(), speed: 0 };
     event.currentTarget.setPointerCapture(event.pointerId);
   }
@@ -138,7 +139,7 @@ export default function ItemDetail({
             </>
           ) : (
             <div aria-hidden="true" className="fd-detail-empty">
-              <Icon name="cone" size={72} />
+              <img alt="" className="fd-empty-logo" height={102} src="/logo.png" width={90} />
             </div>
           )}
           <IconButton className="fd-close" label={t.close} onClick={onClose} ref={closeButton} tone="soft">

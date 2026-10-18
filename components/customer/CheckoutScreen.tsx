@@ -168,7 +168,7 @@ export default function CheckoutScreen({
 
   if (entries.length === 0) {
     return (
-      <section className="fd-screen">
+      <section className="fd-screen" role="main">
         <div className="fd-empty-cart">
           <span className="fd-hero-icon">
             <Icon name="order" size={36} />
@@ -183,7 +183,7 @@ export default function CheckoutScreen({
   }
 
   return (
-    <form className="fd-screen" noValidate onSubmit={submit}>
+    <form className="fd-screen" noValidate role="main" onSubmit={submit}>
       <div className="fd-screen-head">
         <h2>{t.completeOrder}</h2>
       </div>

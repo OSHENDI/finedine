@@ -269,7 +269,6 @@ export default function MenuApp({
                 ) : null}
 
                 {view === HOME && hasHome ? (
-                  <main className="fd-home">
                   <ConcaveCarousel
                     currency={branch.currency}
                     key={`carousel-${lang}`}
@@ -282,7 +281,6 @@ export default function MenuApp({
                     quantities={cart.quantities}
                     title={t.homeTitle}
                   />
-                  </main>
                 ) : (
                   <main className="fd-page" key={view}>
                     <div className="fd-page-title fd-enter">
@@ -327,8 +325,6 @@ export default function MenuApp({
               </>
             ) : null}
 
-            {screen !== "browse" ? (
-              <main className="fd-home">
             {screen === "cart" ? (
               <CartScreen
                 currency={branch.currency}
@@ -360,8 +356,6 @@ export default function MenuApp({
             ) : null}
 
             {screen === "track" && track ? <TrackScreen branchSlug={branch.slug} initial={track.order} key={track.token} lang={lang} onMenu={leaveTrack} token={track.token} /> : null}
-              </main>
-            ) : null}
           </div>
 
           {item ? (

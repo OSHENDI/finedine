@@ -7,7 +7,14 @@ import { useEffect, useRef, useState } from "react";
 // fonts and photos load underneath. It leaves only when all three are done: the video ended, the
 // fonts are ready, and the first photo is in (the rest of the page keeps loading underneath).
 // It plays once per browser tab; moving around the app never replays it.
-const markup = `<video autoplay muted playsinline preload="auto" poster="/intro-poster.jpg" src="/intro.mp4" aria-hidden="true"></video>`;
+// On a slow connection (2G, 3G or data saver) the video is not downloaded at all: the still poster
+// stands in for it, so the bytes go to the menu instead. The small script runs as the page is parsed,
+// before the app's own script, so on a fast connection the video still starts at once.
+const markup =
+  '<video muted playsinline preload="none" poster="/intro-poster.jpg" aria-hidden="true"></video>' +
+  "<script>(function(){var v=document.currentScript.previousElementSibling,c=navigator.connection;" +
+  'if(c&&(c.saveData||/^(slow-2g|2g|3g)$/.test(c.effectiveType)))return;' +
+  'v.preload="auto";v.src="/intro.mp4";var p=v.play();if(p&&p.catch)p.catch(function(){})})()</script>';
 
 export default function Splash() {
   const root = useRef<HTMLDivElement>(null);
@@ -27,9 +34,10 @@ export default function Splash() {
       photo.addEventListener("error", () => resolve(), { once: true });
       window.setTimeout(resolve, 3000);
     });
-    const fonts = document.fonts?.ready.then(() => undefined) ?? Promise.resolve();
+    // Fonts have four seconds; after that the menu shows in the fallback font and swaps when they arrive.
+    const fonts = Promise.race([document.fonts?.ready.then(() => undefined) ?? Promise.resolve(), new Promise<void>((resolve) => window.setTimeout(resolve, 4000))]);
     const played = new Promise<void>((resolve) => {
-      if (!video || reduceMotion) {
+      if (!video || reduceMotion || !video.getAttribute("src")) {
         video?.pause();
         return void window.setTimeout(resolve, 900);
       }

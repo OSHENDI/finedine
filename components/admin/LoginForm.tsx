@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import Icon from "@/components/ui/Icon";
 import type { Lang } from "@/lib/i18n-admin";
 import AdminFrame, { useAdmin } from "./AdminFrame";
 
@@ -51,9 +50,7 @@ function Form() {
     <main className="fda-login">
       <form className="fda-login-card" onSubmit={submit}>
         <div className="fda-actions" style={{ justifyContent: "space-between" }}>
-          <span aria-hidden="true" className="fd-logo">
-            <Icon name="cone" size={22} />
-          </span>
+          <img alt="" className="fd-logo" height={44} src="/logo.png" width={39} />
           <button aria-label={t.switchLabel} className="fd-pill-btn" onClick={switchLanguage} type="button">
             {t.switchTo}
           </button>

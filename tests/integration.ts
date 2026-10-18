@@ -362,7 +362,7 @@ assert.ok(!JSON.stringify(staffLogs).includes("password-"), "audit log never hol
 
 // --- Arabic fields reach the customer menu; empty ones fall back to English in the UI
 const arMenu = await getPublicMenu("demo-cafe");
-assert.equal(arMenu?.branch.nameAr, "الفرع الرئيسي");
+assert.equal(arMenu?.branch.nameAr, "فاميليز آيس");
 const arLatte = arMenu?.categories.flatMap((category) => category.products).find((product) => product.nameEn === "Pistachio Latte");
 assert.ok(arLatte?.descriptionAr, "seed item has an Arabic description");
 assert.equal(arLatte?.variants.find((variant) => variant.name === "Large")?.nameAr, "كبير");

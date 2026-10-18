@@ -73,9 +73,7 @@ function Rail({ venueName, venueNameAr, menuHref, isOwner }: Omit<ShellProps, "i
     <header className="fda-rail">
       <div className="fda-rail-top">
         <div className="fda-brand">
-          <span aria-hidden="true" className="fd-logo">
-            <Icon name="cone" size={22} />
-          </span>
+          <img alt="" className="fd-logo" height={44} src="/logo.png" width={39} />
           <span>{venue}</span>
         </div>
         <div className="fda-tools">

@@ -36,7 +36,7 @@ export default function CartScreen({
   const t = text(lang);
 
   return (
-    <section className="fd-screen">
+    <section className="fd-screen" role="main">
       <div className="fd-screen-head">
         <h2>{t.yourCart}</h2>
         {entries.length ? (

@@ -54,6 +54,21 @@ export default function ConcaveCarousel({
   const latestPaused = useRef(paused);
   latestPaused.current = paused;
   const [base, setBase] = useState(0);
+  // Cards beyond the centre and its two neighbours fetch their photos once the page has loaded, so the
+  // first request goes to the photos that are actually in view.
+  const [late, setLate] = useState(false);
+  useEffect(() => {
+    let timer = 0;
+    const go = () => {
+      timer = window.setTimeout(() => setLate(true), 800);
+    };
+    if (document.readyState === "complete") go();
+    else window.addEventListener("load", go, { once: true });
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("load", go);
+    };
+  }, []);
 
   const draw = useCallback(() => {
     const element = stage.current;
@@ -227,7 +242,7 @@ export default function ConcaveCarousel({
   const indexes = Array.from({ length: REACH * 2 + 1 }, (_, slot) => base - REACH + slot);
 
   return (
-    <div className="fd-home" onFocusCapture={() => (touched.current = Date.now())} onPointerDownCapture={() => (touched.current = Date.now())} onPointerMoveCapture={() => (touched.current = Date.now())}>
+    <div className="fd-home" role="main" onFocusCapture={() => (touched.current = Date.now())} onPointerDownCapture={() => (touched.current = Date.now())} onPointerMoveCapture={() => (touched.current = Date.now())}>
       <Confetti />
       <h1 className="fd-home-title">
         {title.split(" ").slice(0, -1).join(" ")} <em>{title.split(" ").slice(-1)}</em>
@@ -253,7 +268,7 @@ export default function ConcaveCarousel({
                 onClick={() => (index === Math.round(position.current) ? onOpen(product) : turnTo(index))}
                 type="button"
               >
-                <ProductPhoto eager={Math.abs(index - base) <= 1} priority={index === 0} product={product} sizes="(max-width: 520px) 58vw, 260px" />
+                <ProductPhoto eager={Math.abs(index - base) <= 1} hold={!late && Math.abs(index - base) > 1} priority={index === 0} product={product} sizes="(max-width: 520px) 58vw, 260px" />
               </button>
             </div>
           );

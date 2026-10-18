@@ -95,7 +95,7 @@ export default function TrackScreen({
   const comma = lang === "ar" ? "، " : ", ";
 
   return (
-    <section className="fd-screen">
+    <section className="fd-screen" role="main">
       <div aria-live="polite" className="fd-status-card" data-state={order.progress}>
         <div className="fd-status-meta">
           <span>

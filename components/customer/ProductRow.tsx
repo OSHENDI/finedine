@@ -14,16 +14,18 @@ const cdnLoader = ({ src, width, quality }: ImageLoaderProps) => {
   const url = new URL(src);
   url.searchParams.set("w", String(width));
   url.searchParams.set("q", String(quality ?? 70));
-  url.searchParams.set("auto", "format");
+  url.searchParams.set("auto", "format,compress");
   url.searchParams.set("fit", "crop");
   return url.toString();
 };
 
-export function ProductPhoto({ product, sizes, priority, eager }: { product: ProductView; sizes: string; priority?: boolean; eager?: boolean }) {
+// `hold` keeps a photo from downloading yet (the carousel's outer cards wait until the page has loaded).
+export function ProductPhoto({ product, sizes, priority, eager, hold }: { product: ProductView; sizes: string; priority?: boolean; eager?: boolean; hold?: boolean }) {
+  if (hold) return <span aria-hidden="true" className="fd-photo fd-photo--hold" />;
   if (!product.imageUrl) {
     return (
       <span aria-hidden="true" className="fd-photo fd-photo--empty">
-        <Icon name="cone" size={32} />
+        <img alt="" className="fd-empty-logo" height={34} src="/logo.png" width={30} />
       </span>
     );
   }
@@ -39,7 +41,6 @@ export function ProductPhoto({ product, sizes, priority, eager }: { product: Pro
       priority={priority}
       sizes={sizes}
       src={product.imageUrl}
-      unoptimized={product.imageUrl.startsWith("/api/media/")}
     />
   );
 }

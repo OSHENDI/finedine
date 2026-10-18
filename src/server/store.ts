@@ -112,8 +112,8 @@ async function runInitAndSeed() {
   await db.insert(branches).values({
     id: branchId,
     businessId,
-    name: "Main Branch",
-    nameAr: "الفرع الرئيسي",
+    name: "Families Ice",
+    nameAr: "فاميليز آيس",
     slug: "demo-cafe",
     address: "Ramallah, Palestine",
     phone: "+970 59 900 0000",
