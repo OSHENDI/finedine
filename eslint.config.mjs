@@ -5,7 +5,7 @@ const eslintConfig = [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    ignores: [".next/**", "logo-animation/**", "node_modules/**", ".pgdata*/**", "drizzle/**"]
+    ignores: [".next/**", "design-source/**", "node_modules/**", ".pgdata*/**", "drizzle/**"]
   },
   {
     languageOptions: {

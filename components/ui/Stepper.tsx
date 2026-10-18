@@ -1,4 +1,4 @@
-import Icon from "@/components/menu/Icon";
+import Icon from "@/components/ui/Icon";
 import { numberFormat, text, type Lang } from "@/lib/i18n";
 
 // Quantity control: "+" on the left, the number, then on the right "x" (remove) when there is one,

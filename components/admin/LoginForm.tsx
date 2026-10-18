@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import Icon from "@/components/menu/Icon";
+import Icon from "@/components/ui/Icon";
 import type { Lang } from "@/lib/i18n-admin";
 import AdminFrame, { useAdmin } from "./AdminFrame";
 

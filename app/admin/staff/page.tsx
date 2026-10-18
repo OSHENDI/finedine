@@ -1,4 +1,4 @@
-import StaffBoard from "@/components/StaffBoard";
+import StaffBoard from "@/components/admin/StaffBoard";
 import { requireSession } from "@/lib/auth";
 import { listStaff } from "@/lib/store";
 

@@ -4,14 +4,14 @@ import { requestLang } from "@/lib/request-lang";
 import "./base.css";
 import "./customer.css";
 
-// Thmanyah Sans supplied by the owner (custom-font/). Served from this app, so pages never wait
+// Thmanyah Sans supplied by the owner (originals in design-source/fonts, WOFF2 subsets in app/fonts). Served from this app, so pages never wait
 // for, or leak requests to, a font CDN.
 const brand = localFont({
   // Three weights, as compressed WOFF2 subsets (Arabic and Latin): about a third of the original files.
   src: [
-    { path: "../custom-font/thmanyah-sans-regular.woff2", weight: "300 500", style: "normal" },
-    { path: "../custom-font/thmanyah-sans-bold.woff2", weight: "600 700", style: "normal" },
-    { path: "../custom-font/thmanyah-sans-black.woff2", weight: "800 900", style: "normal" }
+    { path: "./fonts/thmanyah-sans-regular.woff2", weight: "300 500", style: "normal" },
+    { path: "./fonts/thmanyah-sans-bold.woff2", weight: "600 700", style: "normal" },
+    { path: "./fonts/thmanyah-sans-black.woff2", weight: "800 900", style: "normal" }
   ],
   variable: "--font-brand",
   display: "swap"

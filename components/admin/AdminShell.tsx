@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import Icon from "@/components/menu/Icon";
+import Icon from "@/components/ui/Icon";
 import AdminFrame, { useAdmin } from "./AdminFrame";
 import type { Lang } from "@/lib/i18n-admin";
 

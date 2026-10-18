@@ -1,4 +1,4 @@
-import OrdersBoard from "@/components/OrdersBoard";
+import OrdersBoard from "@/components/admin/OrdersBoard";
 import { requireSession } from "@/lib/auth";
 import { getFirstBranchForBusiness, getOrders } from "@/lib/store";
 

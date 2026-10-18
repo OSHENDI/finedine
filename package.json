@@ -14,10 +14,10 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "db:reset": "node scripts/reset-db.mjs",
-    "test:integration": "tsx scripts/integration.ts && tsx scripts/migrations-test.ts",
+    "test:integration": "tsx tests/integration.ts && tsx tests/migrations-test.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node --env-file-if-exists=.env scripts/migrate.mjs",
-    "test:postgres": "tsx scripts/postgres-test.ts"
+    "test:postgres": "tsx tests/postgres-test.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "0.5.9",

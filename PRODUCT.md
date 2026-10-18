@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Next.js 16 (App Router, route handlers, no Server Actions), React 19, TypeScript, Drizzle ORM on PostgreSQL (embedded PGlite in development). Decided and recorded in AUDIT.md section 10. Customer screens are mobile-first web pages opened from a QR code; no native app.
+Next.js 16 (App Router, route handlers, no Server Actions), React 19, TypeScript, Drizzle ORM on PostgreSQL (embedded PGlite in development). Decided and recorded in docs/history/AUDIT-2026-10.md, section 10. Customer screens are mobile-first web pages opened from a QR code; no native app.
 
 ## Users
 
@@ -40,7 +40,7 @@ A universal QR ordering tool for any venue, with manual payment verification (wa
 
 ## Brand Commitments
 
-- Typeface: Thmanyah Sans, files in `custom-font/` (light, regular, medium, bold, black), supplied by the owner.
+- Typeface: Thmanyah Sans, three weights (regular, bold, black) as WOFF2 subsets in `app/fonts/`, supplied by the owner.
 - Palette supplied by the owner (primary pink #cd3266, secondary amber #e3971c, accent crimson #d52a4f, warm cream background #faf7ea, warm brown text) with a light token set only (the app has no dark mode) and pink-to-amber, pink-to-crimson and amber-to-crimson gradients. Cheerful ice-cream-shop feel in the spirit of a well-known ice-cream chain, not its exact colors or logo.
 - Reference screenshots from another product are inspiration for the page structure only and must not be copied.
 

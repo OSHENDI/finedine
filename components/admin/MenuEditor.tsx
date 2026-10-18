@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { FormEvent, useRef, useState } from "react";
-import Icon from "@/components/menu/Icon";
+import Icon from "@/components/ui/Icon";
 import { shrinkImage } from "@/lib/image";
 import { localized } from "@/lib/i18n";
 import { fillText } from "@/lib/i18n-admin";
@@ -174,11 +174,6 @@ export default function MenuEditor({ categories, currency, canEdit }: { categori
                 <textarea className="fd-input" dir="rtl" maxLength={400} onChange={(event) => change("descriptionAr", event.target.value)} value={draft.descriptionAr} />
               </label>
             </div>
-            <label>
-              {t.menu.labels}
-              <input className="fd-input" maxLength={120} onChange={(event) => change("labels", event.target.value)} value={draft.labels} />
-            </label>
-
             <div className="fda-photo-row">
               {draft.imageUrl ? <img alt="" className="fda-photo-preview" height={96} src={draft.imageUrl} width={96} /> : <div className="fda-photo-preview">{t.menu.noPhoto}</div>}
               <label className="fda-btn fda-btn--line">
@@ -236,9 +231,6 @@ export default function MenuEditor({ categories, currency, canEdit }: { categori
             <div className="fda-actions">
               <label className="fda-check">
                 <input checked={draft.isAvailable} onChange={(event) => change("isAvailable", event.target.checked)} type="checkbox" /> {t.menu.available}
-              </label>
-              <label className="fda-check">
-                <input checked={draft.isFeatured} onChange={(event) => change("isFeatured", event.target.checked)} type="checkbox" /> {t.menu.featured}
               </label>
             </div>
             <div className="fda-actions">

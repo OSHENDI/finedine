@@ -1,4 +1,4 @@
-import SettingsBoard from "@/components/SettingsBoard";
+import SettingsBoard from "@/components/admin/SettingsBoard";
 import { requireSession } from "@/lib/auth";
 import { getSettings } from "@/lib/store";
 

@@ -1,4 +1,4 @@
-import type { CartLine } from "@/components/menu/useCart";
+import type { CartLine } from "@/components/customer/useCart";
 
 // The customer's open order (what they added, the kitchen note) and the order they placed are kept
 // in cookies, so a closed tab, a phone call or a switch to the bank app loses nothing. The server

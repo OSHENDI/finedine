@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import MenuApp from "@/components/menu/MenuApp";
+import MenuApp from "@/components/customer/MenuApp";
 import { customerState } from "@/lib/customer-state";
 import { requestLang, tableFromQuery } from "@/lib/request-lang";
 import { getPublicMenu } from "@/lib/store";

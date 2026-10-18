@@ -1,4 +1,4 @@
-import TablesBoard from "@/components/TablesBoard";
+import TablesBoard from "@/components/admin/TablesBoard";
 import { requireSession } from "@/lib/auth";
 import { getFirstBranchForBusiness, listQrCodes } from "@/lib/store";
 

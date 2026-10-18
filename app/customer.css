@@ -1141,38 +1141,8 @@ html[data-intro="leaving"] .fd-contents > * {
   gap: 18px;
 }
 
-.fd-lines + .fd-field,
-.fd-lines + .fd-total {
+.fd-lines + .fd-field {
   margin-block-start: 16px;
-}
-
-.fd-field + .fd-total {
-  margin-block-start: 12px;
-}
-
-.fd-total {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 18px 4px 6px;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.fd-total::before {
-  content: "";
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 1px;
-  background: var(--rule);
-}
-.fd-total strong {
-  color: var(--c-primary-text);
-  font-size: 22px;
-  font-weight: 900;
 }
 
 .fd-sticky-cta {
@@ -1226,16 +1196,6 @@ html[data-intro="leaving"] .fd-contents > * {
   border-radius: 20px;
   background: var(--primary-100);
   color: var(--c-primary-text);
-}
-
-/* The table is already known from the QR code: one quiet line, nothing to fill in. */
-.fd-served {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--c-primary-text);
-  font-size: 18px;
-  font-weight: 900;
 }
 
 .fd-field-error {

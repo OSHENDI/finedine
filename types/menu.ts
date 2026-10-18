@@ -57,13 +57,3 @@ export type PaymentMethodView = {
   detailsAr: string | null;
   isDefault: boolean;
 };
-
-export type CartItemView = {
-  key: string;
-  productId: string;
-  name: string;
-  quantity: number;
-  unitCents: number;
-  variant?: VariantView;
-  addOns: AddOnView[];
-};

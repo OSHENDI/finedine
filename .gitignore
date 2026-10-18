@@ -15,3 +15,6 @@ AGENTS.md
 .local-secret
 .claude
 logo-animation/out
+design-source/
+next-env.d.ts
+.impeccable/hook.cache.json
