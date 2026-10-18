@@ -2,13 +2,23 @@
   "name": "finedine",
   "version": "0.1.0",
   "private": true,
-  "engines": { "node": ">=20.9" },
-  "browserslist": ["chrome >= 100", "edge >= 100", "firefox >= 100", "safari >= 15.4", "ios_saf >= 15.4", "samsung >= 18"],
+  "engines": {
+    "node": ">=20.9"
+  },
+  "browserslist": [
+    "chrome >= 100",
+    "edge >= 100",
+    "firefox >= 100",
+    "safari >= 15.4",
+    "ios_saf >= 15.4",
+    "samsung >= 18"
+  ],
   "type": "module",
   "scripts": {
     "dev": "next dev",
     "local": "node scripts/local.mjs",
     "build": "next build --webpack",
+    "release": "node scripts/release.mjs",
     "prestart": "node --env-file-if-exists=.env scripts/migrate.mjs",
     "start": "next start",
     "lint": "eslint .",

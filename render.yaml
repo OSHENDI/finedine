@@ -1,8 +1,8 @@
 # Render Blueprint: one free web service that deploys from GitHub on every push.
 # New > Blueprint in the Render dashboard, pick this repository, and Render reads this file.
 #
-# Render does not build the site (the free plan has too little memory for it). GitHub Actions builds it
-# and publishes the result to the `release` branch (see .github/workflows/ci.yml); Render installs the
+# Render does not build the site (the free plan has too little memory for it). `npm run release` builds it
+# on your computer and publishes the result to the `release` branch (see scripts/release.mjs); Render installs the
 # production dependencies from that branch and starts it. Secrets marked sync:false are asked for once
 # in the dashboard; generated ones are created for you.
 services:

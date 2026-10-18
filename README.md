@@ -30,7 +30,7 @@ npm run build
 
 ## Put it online
 
-Free setup with GitHub auto-deploy (GitHub Actions builds, Render runs, Neon stores data): see [docs/DEPLOY.md](docs/DEPLOY.md), which also says where images, video and fonts live.
+Free setup (`npm run release` builds on this computer, Render runs, Neon stores data): see [docs/DEPLOY.md](docs/DEPLOY.md), which also says where images, video and fonts live.
 Settings are listed in `.env.example`.
 
 ## More

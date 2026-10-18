@@ -1,7 +1,7 @@
 # Putting FineDine online (free) and updating it with git push
 
-GitHub holds the code, GitHub Actions builds the site, Render runs it, Neon stores the data.
-Both Render and Neon have a free plan. You push to GitHub; a few minutes later the live site is new.
+GitHub holds the code, your own computer builds the site, Render runs it, Neon stores the data.
+Both Render and Neon have a free plan. You run one command (`npm run release`); a few minutes later the live site is new.
 
 ## What it looks like when it is live
 
@@ -11,7 +11,7 @@ Both Render and Neon have a free plan. You push to GitHub; a few minutes later t
 - Customers on their phones scan, order and pay; their order screen updates by itself.
 - Staff see new orders appear live and confirm payments.
 - Menu changes, prices and photos are made in the staff screens and show up at once. No deploy.
-- Code changes go live a few minutes after `git push`.
+- Code changes go live a few minutes after `npm run release`.
 
 ## Where things live (images, video, fonts, files)
 
@@ -35,9 +35,9 @@ or a CDN and link to them.
 1. **Database (Neon).** Create a free account at neon.tech and a project in the Frankfurt region.
    Open "Connect", switch OFF "Connection pooling", and copy the connection string. It looks like
    `postgresql://user:password@ep-xxxx.eu-central-1.aws.neon.tech/neondb?sslmode=require`.
-2. **GitHub.** The repository is `OSHENDI/finedine`. Push `main`. In the repository, open the Actions
-   tab and wait for the "CI" run to turn green (3 to 5 minutes). It creates a branch called `release`
-   that holds the built site. Render needs that branch, so do not skip the wait.
+2. **Publish the site.** Commit your work, then run `npm run release`. It checks the code, builds the site
+   on your computer and pushes the result to a branch called `release` on GitHub. Render needs that
+   branch, so do this before step 3. The first run takes 3 to 5 minutes.
 3. **App (Render).** Create a free account at render.com and connect your GitHub. Choose New,
    Blueprint, select the repository. Render reads `render.yaml`. It asks for three values:
    - `DATABASE_URL`: the Neon string from step 1.
@@ -53,16 +53,17 @@ or a CDN and link to them.
 
 ## Updating
 
-- Code: `git push` to `main`. Actions checks the code (types, lint, tests), builds it and publishes it
-  to `release`; Render deploys `release` by itself. Watch the Actions tab, then the Render Events tab.
-  A broken check stops the release, so a bad push never goes live.
+- Code: commit, then `npm run release`. It runs the checks (types, lint, tests), builds, and publishes to
+  `release`; Render deploys `release` by itself (watch the Render Events tab). A failing check stops the
+  release, so a bad change never goes live. `git push` alone only saves the source on GitHub.
 - Menu, prices, photos, tables and staff: change them in the staff screens.
 - Database changes (files in `drizzle/`) are applied automatically each time the app starts.
 
-## Why the site is built on GitHub and not on Render
+## Why the site is built on your computer
 
-Building the site needs far more than 512 MB (about 1.4 GB measured on a Windows computer); the free Render instance has 512 MB, so the build
-would be killed. GitHub builds it for free with plenty of memory, and Render only installs and runs it.
+Building the site needs far more than 512 MB (about 1.4 GB measured on a Windows computer); the free
+Render instance has 512 MB, so a build there would be killed. Your computer builds it, and Render only
+installs and runs the result. No CI service or paid plan is needed.
 
 ## Settings reference
 
@@ -89,10 +90,8 @@ would be killed. GitHub builds it for free with plenty of memory, and Render onl
 
 ## If something goes wrong
 
-- **Render says the branch `release` does not exist:** the first Actions run has not finished or has
-  failed. Open the Actions tab on GitHub and fix or re-run it.
-- **Actions fails on the last step (push to release):** in the repository open Settings, Actions,
-  General, "Workflow permissions", and choose "Read and write permissions".
+- **Render says the branch `release` does not exist:** run `npm run release` once.
+- **`npm run release` stops with an error:** it names the failed check; fix it and run again.
 - **Page shows an error right after "live":** wait 2 minutes; the first start prepares the database.
 - **Login fails after a typo in the email or password:** change the value in Render under Environment.
   If the first start already finished, open Neon's SQL Editor, run `TRUNCATE businesses CASCADE;`, then

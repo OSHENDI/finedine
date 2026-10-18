@@ -1,7 +1,8 @@
 // Collects what the live server needs into one folder: the built site (.next, without its build cache),
 // the production dependency list, the migration runner and its SQL, and the public files.
-// GitHub Actions builds the site (the free host has too little memory to build it), runs this, and
-// publishes the folder to the `release` branch, which the host deploys. Usage: node scripts/make-release.mjs <folder>
+// `npm run release` (scripts/release.mjs) builds the site on this computer (the free host has too little
+// memory to build it), runs this, and publishes the folder to the `release` branch, which the host deploys.
+// Usage: node scripts/make-release.mjs <folder>
 import { cpSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import path from "node:path";
 
